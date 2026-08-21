@@ -60,7 +60,10 @@ mod tests {
             name: "r".into(),
             stars: 0,
             forks: 0,
-            open_issues: 0,
+            watchers: 0,
+            releases: 0,
+            disk_usage_kb: 0,
+            license: None,
             langs: langs.into_iter().map(|(n, s)| (n.to_string(), s)).collect(),
         }
     }

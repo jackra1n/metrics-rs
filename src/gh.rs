@@ -1,7 +1,6 @@
-use crate::model::{ContribWeek, GhRepo, GhUser, LineWeek};
+use crate::model::{ContribWeek, GhRepo, GhUser, LineTotals};
 use serde::Deserialize;
 use serde_json::{Value, json};
-use std::collections::BTreeMap;
 use std::time::Duration;
 
 const GRAPHQL_URL: &str = "https://api.github.com/graphql";
@@ -9,16 +8,19 @@ const GRAPHQL_URL: &str = "https://api.github.com/graphql";
 /// Live-validated query: owner repos only, no forks, newest first, 100/page.
 pub const PROFILE_QUERY: &str = r#"query($login:String!,$after:String){
   user(login:$login){
-    login name bio avatarUrl createdAt
-    followers{totalCount} following{totalCount}
+    login name avatarUrl createdAt
+    followers{totalCount} sponsors{totalCount}
     repositories(first:100,after:$after,ownerAffiliations:[OWNER],isFork:false,
                  orderBy:{field:UPDATED_AT,direction:DESC}){
       totalCount
       pageInfo{endCursor hasNextPage}
       nodes{ name
              stargazers{totalCount}
+             watchers{totalCount}
              forkCount
-             issues(states:OPEN){totalCount}
+             releases{totalCount}
+             diskUsage
+             licenseInfo{spdxId}
              languages(first:8){edges{size node{name}}} }
     }
   }
@@ -103,7 +105,14 @@ struct LangConn {
     edges: Vec<LangEdge>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+struct LicenseInfo {
+    #[serde(default)]
+    spdx_id: Option<String>,
+}
+
+#[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 struct RepoPayload {
     #[serde(default)]
@@ -111,9 +120,15 @@ struct RepoPayload {
     #[serde(default)]
     stargazers: TotalCount,
     #[serde(default)]
+    watchers: TotalCount,
+    #[serde(default)]
     fork_count: u64,
     #[serde(default)]
-    issues: TotalCount,
+    releases: TotalCount,
+    #[serde(default)]
+    disk_usage: u64,
+    #[serde(default)]
+    license_info: Option<LicenseInfo>,
     #[serde(default)]
     languages: LangConn,
 }
@@ -129,7 +144,7 @@ struct RepoConn {
     nodes: Vec<RepoPayload>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 struct UserPayload {
     #[serde(default)]
@@ -137,13 +152,11 @@ struct UserPayload {
     #[serde(default)]
     name: Option<String>,
     #[serde(default)]
-    bio: Option<String>,
-    #[serde(default)]
     avatar_url: String,
     #[serde(default)]
-    followers: TotalCount,
+    created_at: String,
     #[serde(default)]
-    following: TotalCount,
+    sponsors: TotalCount,
     #[serde(default)]
     repositories: RepoConn,
 }
@@ -171,10 +184,9 @@ pub fn fetch_profile(
         let u = user.get_or_insert_with(|| GhUser {
             login: payload.login.clone(),
             name: payload.name.clone(),
-            bio: payload.bio.clone(),
             avatar_url: payload.avatar_url.clone(),
-            followers: payload.followers.total_count,
-            following: payload.following.total_count,
+            created_at: payload.created_at.clone(),
+            sponsors: payload.sponsors.total_count,
             repos_total: 0,
             repos: Vec::new(),
         });
@@ -188,8 +200,14 @@ pub fn fetch_profile(
                     .map(|e| (e.node.name, e.size))
                     .collect(),
                 stars: n.stargazers.total_count,
+                watchers: n.watchers.total_count,
                 forks: n.fork_count,
-                open_issues: n.issues.total_count,
+                releases: n.releases.total_count,
+                disk_usage_kb: n.disk_usage,
+                license: n
+                    .license_info
+                    .and_then(|l| l.spdx_id)
+                    .filter(|s| !s.is_empty()),
                 name: n.name,
             });
         }
@@ -237,7 +255,6 @@ pub fn contributors_stats(
         if let Some(weeks) = entry["weeks"].as_array() {
             for w in weeks {
                 out.push(ContribWeek {
-                    w: w["w"].as_u64().unwrap_or(0),
                     a: w["a"].as_u64().unwrap_or(0),
                     d: w["d"].as_u64().unwrap_or(0),
                 });
@@ -248,6 +265,7 @@ pub fn contributors_stats(
 }
 
 /// UTC calendar date (YYYY-MM-DD) from unix seconds; pure civil-from-days math.
+#[allow(dead_code)] // retained: date math used by tests and future windows
 pub fn iso_date(unix_secs: u64) -> String {
     let days = (unix_secs / 86_400) as i64;
     // Howard Hinnant's civil_from_days; 1970-01-01 = day 0.
@@ -266,10 +284,10 @@ pub fn iso_date(unix_secs: u64) -> String {
 
 const STATS_ATTEMPTS: usize = 12;
 
-/// Per-repo contributors stats with 202 backoff (12 x 2s), aggregated to
-/// weekly added/deleted for the profile user only. Unavailable stats warn.
-pub fn collect_weeks(agent: &ureq::Agent, token: &str, user: &GhUser) -> Vec<LineWeek> {
-    let mut agg: BTreeMap<String, (u64, u64)> = BTreeMap::new();
+/// Per-repo contributors stats with 202 backoff (12 x 2s), summed to total
+/// added/deleted lines for the profile user only. Unavailable stats warn.
+pub fn collect_lines(agent: &ureq::Agent, token: &str, user: &GhUser) -> LineTotals {
+    let mut totals = LineTotals::default();
     for repo in &user.repos {
         let mut got: Option<Vec<ContribWeek>> = None;
         for _attempt in 0..STATS_ATTEMPTS {
@@ -285,10 +303,8 @@ pub fn collect_weeks(agent: &ureq::Agent, token: &str, user: &GhUser) -> Vec<Lin
         match got {
             Some(weeks) => {
                 for w in weeks {
-                    let date = iso_date(w.w);
-                    let e = agg.entry(date).or_insert((0, 0));
-                    e.0 += w.a;
-                    e.1 += w.d;
+                    totals.added += w.a;
+                    totals.deleted += w.d;
                 }
             }
             None => eprintln!(
@@ -297,13 +313,7 @@ pub fn collect_weeks(agent: &ureq::Agent, token: &str, user: &GhUser) -> Vec<Lin
             ),
         }
     }
-    agg.into_iter()
-        .map(|(date, (added, deleted))| LineWeek {
-            date,
-            added,
-            deleted,
-        })
-        .collect()
+    totals
 }
 
 #[cfg(test)]
