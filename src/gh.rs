@@ -20,7 +20,6 @@ pub const PROFILE_QUERY: &str = r#"query($login:String!,$after:String){
              forkCount
              releases{totalCount}
              diskUsage
-             licenseInfo{spdxId}
              languages(first:8){edges{size node{name}}} }
     }
   }
@@ -107,13 +106,6 @@ struct LangConn {
 
 #[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
-struct LicenseInfo {
-    #[serde(default)]
-    spdx_id: Option<String>,
-}
-
-#[derive(Deserialize, Default)]
-#[serde(rename_all = "camelCase")]
 struct RepoPayload {
     #[serde(default)]
     name: String,
@@ -127,8 +119,6 @@ struct RepoPayload {
     releases: TotalCount,
     #[serde(default)]
     disk_usage: u64,
-    #[serde(default)]
-    license_info: Option<LicenseInfo>,
     #[serde(default)]
     languages: LangConn,
 }
@@ -204,10 +194,7 @@ pub fn fetch_profile(
                 forks: n.fork_count,
                 releases: n.releases.total_count,
                 disk_usage_kb: n.disk_usage,
-                license: n
-                    .license_info
-                    .and_then(|l| l.spdx_id)
-                    .filter(|s| !s.is_empty()),
+                license: None, // filled per-repo from REST (proper SPDX case)
                 name: n.name,
             });
         }
@@ -219,7 +206,25 @@ pub fn fetch_profile(
             _ => break,
         }
     }
-    Ok(user.ok_or_else(|| format!("user not found: {login}"))?)
+    let mut user = user.ok_or_else(|| format!("user not found: {login}"))?;
+    // REST license metadata: proper SPDX casing ("AGPL-3.0"); serial calls,
+    // rate-limit friendly; failures leave license None
+    for repo in &mut user.repos {
+        let url = format!("https://api.github.com/repos/{}/{}", user.login, repo.name);
+        if let Ok(mut res) = agent
+            .get(&url)
+            .header("Authorization", &format!("Bearer {token}"))
+            .call()
+            && res.status().as_u16() == 200
+            && let Ok(v) = res.body_mut().read_json::<Value>()
+        {
+            repo.license = v["license"]["spdx_id"]
+                .as_str()
+                .filter(|s| !s.is_empty() && *s != "NOASSERTION" && *s != "OTHER")
+                .map(str::to_string);
+        }
+    }
+    Ok(user)
 }
 
 /// GET /repos/{owner}/{repo}/stats/contributors.
@@ -257,6 +262,7 @@ pub fn contributors_stats(
                 out.push(ContribWeek {
                     a: w["a"].as_u64().unwrap_or(0),
                     d: w["d"].as_u64().unwrap_or(0),
+                    c: w["c"].as_u64().unwrap_or(0),
                 });
             }
         }
@@ -305,6 +311,7 @@ pub fn collect_lines(agent: &ureq::Agent, token: &str, user: &GhUser) -> LineTot
                 for w in weeks {
                     totals.added += w.a;
                     totals.deleted += w.d;
+                    totals.commits += w.c;
                 }
             }
             None => eprintln!(

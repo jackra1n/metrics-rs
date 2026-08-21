@@ -146,6 +146,53 @@ impl Builder {
     }
 }
 
+/// Minimal 12x12 Feather-style icon paths keyed by fact name, drawn at
+/// (x,y) = top-left of the icon box, stroked in `color`.
+fn icon(name: &str, x: f64, y: f64, color: &str) -> String {
+    let p = |d: &str| {
+        format!(
+            r#"  <g transform="translate({x},{y}) scale(0.5)" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{d}</g>"#,
+            x = coord(x),
+            y = coord(y),
+            color = color,
+            d = d
+        )
+    };
+    match name {
+        // scales / license
+        "LICENSE" => p(
+            r#"<path d="M12 3v18M3 7l4-4 4 4M5 3v6a4 4 0 0 0 8 0V3M17 21a3 3 0 0 0 3-3V9l-4 4"/>"#,
+        ),
+        // star
+        "STARGAZERS" => p(
+            r#"<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>"#,
+        ),
+        // eye
+        "WATCHERS" => p(
+            r#"<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>"#,
+        ),
+        // git fork
+        "FORKS" => p(
+            r#"<circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9M12 13v2"/>"#,
+        ),
+        // heart
+        "SPONSORS" => p(
+            r#"<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>"#,
+        ),
+        // package
+        "RELEASES" => p(
+            r#"<path d="M16.5 9.4 7.55 4.24M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8zM3.3 7l8.7 5 8.7-5M12 22V12"/>"#,
+        ),
+        // hard drive
+        "STORAGE" => p(
+            r#"<line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/>"#,
+        ),
+        // activity / pulse
+        "LINES" => p(r#"<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>"#),
+        _ => String::new(),
+    }
+}
+
 /// Render the profile card: compact header, 2x4 fact grid, language bar.
 /// Body is built first with a row cursor, then wrapped in the root `<svg>`
 /// so height is known before emission. Fully deterministic.
@@ -185,11 +232,10 @@ pub fn render(p: &Profile) -> String {
         b.y, b.y, DIVIDER
     ));
     b.y += 16.0;
-
-    // fact grid: 2 rows x 4 columns
+    // fact grid: 2 rows x 4 columns, icon left of label
     let license_label = p.preferred_license.as_deref().unwrap_or("none");
     let facts: [(&str, String); 8] = [
-        ("LICENSE", esc(&license_label.to_lowercase())),
+        ("LICENSE", esc(license_label)),
         ("STARGAZERS", fmt(p.stars)),
         ("WATCHERS", fmt(p.watchers)),
         ("FORKS", fmt(p.forks)),
@@ -207,8 +253,9 @@ pub fn render(p: &Profile) -> String {
         let row = i / 4;
         let lx = XS[col];
         let ly = b.y + row as f64 * 44.0;
-        b.push(text(lx, ly, 9, MUTED, label));
-        b.push(bold(lx, ly + 18.0, 15, TEXT, &value));
+        b.push(icon(label, lx + 1.0, ly - 8.0, MUTED));
+        b.push(text(lx + 15.0, ly, 9, MUTED, label));
+        b.push(bold(lx + 15.0, ly + 18.0, 15, TEXT, &value));
     }
     b.y += 88.0;
 
@@ -217,7 +264,17 @@ pub fn render(p: &Profile) -> String {
         r#"  <line x1="16" y1="{}" x2="464" y2="{}" stroke="{}"/>"#,
         b.y, b.y, DIVIDER
     ));
-    b.y += 16.0;
+    b.y += 14.0;
+
+    // faint analysis-meta line: what the numbers above were computed over
+    let meta = format!(
+        "analyzed {} repos · {} · {} commits",
+        p.user.repos_total,
+        fmt_storage(p.storage_kb),
+        fmt(p.lines.commits),
+    );
+    b.push(text(X0, b.y + 9.0, 8, MUTED, &meta));
+    b.y += 18.0;
 
     // languages section
     b.push(text(X0, b.y, 9, MUTED, "LANGUAGES"));
@@ -350,6 +407,7 @@ mod tests {
             lines: LineTotals {
                 added: 1234,
                 deleted: 56_000,
+                commits: 890,
             },
         }
     }
@@ -403,9 +461,9 @@ mod tests {
         ] {
             assert!(svg.contains(label), "missing {label}");
         }
-        for gone in ["followers • ", "<polygon"] {
-            assert!(!svg.contains(gone), "stale element: {gone}");
-        }
+        assert!(!svg.contains("followers • "));
+        // the old chart polygons carried opacity; icons don't
+        assert!(!svg.contains("opacity"), "stale chart polygon");
         assert!(svg.ends_with("</svg>\n"));
     }
 

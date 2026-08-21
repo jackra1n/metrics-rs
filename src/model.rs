@@ -24,17 +24,20 @@ pub struct GhUser {
     pub repos: Vec<GhRepo>,
 }
 
-/// added/deleted/commits per week from the contributors-stats REST endpoint
+/// added/deleted/commit counts per week from contributors-stats
 #[derive(Clone, serde::Deserialize)]
 pub struct ContribWeek {
     pub a: u64,
     pub d: u64,
+    pub c: u64,
 }
 
 #[derive(Debug, Default)]
 pub struct LineTotals {
     pub added: u64,
     pub deleted: u64,
+    /// commits authored by the user across analyzed repos
+    pub commits: u64,
 }
 
 pub struct LangStat {
