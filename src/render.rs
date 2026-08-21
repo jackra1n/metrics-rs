@@ -201,7 +201,9 @@ pub fn render(p: &Profile) -> String {
             .max()
             .unwrap_or(1)
             .max(1);
-        let k = (45.0 / peak as f64).max(1.0);
+        // normalize so the tallest week spans exactly 45px; no floor —
+        // a pixel-per-line floor launches real data off-card
+        let k = 45.0 / peak as f64;
         let n = p.weeks.len();
         let xi = |i: usize| X0 + i as f64 * CHART_W / (n - 1) as f64;
 
