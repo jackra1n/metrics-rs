@@ -14,8 +14,10 @@ pub fn parse(argv: Vec<String>) -> Result<Args, String> {
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "--token" => {
-                token =
-                    Some(it.next().ok_or_else(|| "missing value for --token".to_string())?);
+                token = Some(
+                    it.next()
+                        .ok_or_else(|| "missing value for --token".to_string())?,
+                );
             }
             other if other.starts_with('-') => {
                 return Err(format!("unknown flag: {other}"));
@@ -31,5 +33,9 @@ pub fn parse(argv: Vec<String>) -> Result<Args, String> {
         .or_else(|| std::env::var("GITHUB_TOKEN").ok())
         .or_else(|| std::env::var("GH_TOKEN").ok())
         .ok_or_else(|| "missing token: pass --token or set GITHUB_TOKEN".to_string())?;
-    Ok(Args { username, output, token })
+    Ok(Args {
+        username,
+        output,
+        token,
+    })
 }

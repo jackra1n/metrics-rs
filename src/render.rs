@@ -33,7 +33,10 @@ pub fn esc(s: &str) -> String {
 /// else plain integer.
 pub fn fmt(n: u64) -> String {
     let compact = |v: f64, suffix: &str| {
-        let s = format!("{:.1}", v).trim_end_matches('0').trim_end_matches('.').to_string();
+        let s = format!("{:.1}", v)
+            .trim_end_matches('0')
+            .trim_end_matches('.')
+            .to_string();
         format!("{s}{suffix}")
     };
     if n >= 1_000_000 {
@@ -99,10 +102,10 @@ fn wrap(s: &str, width: usize, max_lines: usize) -> Vec<String> {
         lines.push(rest[..take].trim_end().to_string());
         rest = rest[take..].trim_start();
     }
-    if !rest.is_empty() {
-        if let Some(last) = lines.last_mut() {
-            last.push('…');
-        }
+    if !rest.is_empty()
+        && let Some(last) = lines.last_mut()
+    {
+        last.push('…');
     }
     lines
 }
@@ -122,7 +125,10 @@ impl Builder {
 /// Render the full profile card. Body first with a row cursor, then wrap in
 /// the root `<svg>` element so the height is known before emission.
 pub fn render(p: &Profile) -> String {
-    let mut b = Builder { y: 16.0, body: String::new() };
+    let mut b = Builder {
+        y: 16.0,
+        body: String::new(),
+    };
 
     // header: avatar + identity (y=16..88)
     b.push(r#"  <clipPath id="av"><circle cx="44" cy="44" r="28"/></clipPath>"#.to_string());
@@ -179,7 +185,13 @@ pub fn render(p: &Profile) -> String {
 
     let total_changed: u64 = p.weeks.iter().map(|w| w.added + w.deleted).sum();
     if p.weeks.len() < 2 || total_changed == 0 {
-        b.push(text((X0 + X1) / 2.0, b.y + 50.0, 11, MUTED, "no activity data"));
+        b.push(text(
+            (X0 + X1) / 2.0,
+            b.y + 50.0,
+            11,
+            MUTED,
+            "no activity data",
+        ));
     } else {
         let ymid = b.y + 50.0;
         let peak = p
@@ -254,11 +266,22 @@ pub fn render(p: &Profile) -> String {
     b.y += 14.0;
 
     if p.languages.is_empty() {
-        b.push(text((X0 + X1) / 2.0, b.y + 14.0, 11, MUTED, "no language data"));
+        b.push(text(
+            (X0 + X1) / 2.0,
+            b.y + 14.0,
+            11,
+            MUTED,
+            "no language data",
+        ));
         b.y += 18.0;
     } else {
         // stacked bar; last segment absorbs rounding remainder
-        let total_pct: f64 = p.languages.iter().map(|l| l.pct).sum::<f64>().max(f64::MIN_POSITIVE);
+        let total_pct: f64 = p
+            .languages
+            .iter()
+            .map(|l| l.pct)
+            .sum::<f64>()
+            .max(f64::MIN_POSITIVE);
         let mut bx = X0;
         for (i, lang) in p.languages.iter().enumerate() {
             let seg_w = if i == p.languages.len() - 1 {
@@ -298,7 +321,7 @@ pub fn render(p: &Profile) -> String {
                 pct = lang.pct,
             ));
         }
-        let rows = (p.languages.len() + 1) / 2;
+        let rows = p.languages.len().div_ceil(2);
         b.y += rows as f64 * 18.0 + 4.0;
     }
 
@@ -327,10 +350,12 @@ mod tests {
             user: GhUser {
                 login: "jackra1n".into(),
                 name: Some("Jack & <Friends>".into()),
-                bio: Some("line one
-and more".into()),
+                bio: Some(
+                    "line one
+and more"
+                        .into(),
+                ),
                 avatar_url: "https://avatars.githubusercontent.com/u/1?v=4".into(),
-                created_at: "2020-01-01T00:00:00Z".into(),
                 followers: 1234,
                 following: 42,
                 repos_total: 2,
@@ -345,10 +370,22 @@ and more".into()),
             stars: 7,
             forks: 3,
             open_issues: 1,
-            languages: vec![LangStat { name: "Rust".into(), size: 10, pct: 100.0, color: "#dea584" }],
+            languages: vec![LangStat {
+                name: "Rust".into(),
+                pct: 100.0,
+                color: "#dea584",
+            }],
             weeks: vec![
-                LineWeek { date: "2025-09-28".into(), added: 10, deleted: 2 },
-                LineWeek { date: "2025-10-05".into(), added: 20, deleted: 4 },
+                LineWeek {
+                    date: "2025-09-28".into(),
+                    added: 10,
+                    deleted: 2,
+                },
+                LineWeek {
+                    date: "2025-10-05".into(),
+                    added: 20,
+                    deleted: 4,
+                },
             ],
         }
     }

@@ -1,6 +1,6 @@
 use crate::model::{ContribWeek, GhRepo, GhUser, LineWeek};
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::time::Duration;
 
@@ -56,14 +56,14 @@ pub fn graphql(
         return Err(msg.into());
     }
     let v: Value = serde_json::from_str(&body)?;
-    if let Some(errs) = v.get("errors").and_then(Value::as_array) {
-        if let Some(first) = errs.first() {
-            return Err(first["message"]
-                .as_str()
-                .unwrap_or("unknown graphql error")
-                .to_string()
-                .into());
-        }
+    if let Some(errs) = v.get("errors").and_then(Value::as_array)
+        && let Some(first) = errs.first()
+    {
+        return Err(first["message"]
+            .as_str()
+            .unwrap_or("unknown graphql error")
+            .to_string()
+            .into());
     }
     Ok(v)
 }
@@ -141,8 +141,6 @@ struct UserPayload {
     #[serde(default)]
     avatar_url: String,
     #[serde(default)]
-    created_at: String,
-    #[serde(default)]
     followers: TotalCount,
     #[serde(default)]
     following: TotalCount,
@@ -175,7 +173,6 @@ pub fn fetch_profile(
             name: payload.name.clone(),
             bio: payload.bio.clone(),
             avatar_url: payload.avatar_url.clone(),
-            created_at: payload.created_at.clone(),
             followers: payload.followers.total_count,
             following: payload.following.total_count,
             repos_total: 0,
@@ -184,14 +181,22 @@ pub fn fetch_profile(
         u.repos_total = payload.repositories.total_count;
         for n in payload.repositories.nodes {
             u.repos.push(GhRepo {
-                langs: n.languages.edges.into_iter().map(|e| (e.node.name, e.size)).collect(),
+                langs: n
+                    .languages
+                    .edges
+                    .into_iter()
+                    .map(|e| (e.node.name, e.size))
+                    .collect(),
                 stars: n.stargazers.total_count,
                 forks: n.fork_count,
                 open_issues: n.issues.total_count,
                 name: n.name,
             });
         }
-        match (payload.repositories.page_info.has_next_page, payload.repositories.page_info.end_cursor) {
+        match (
+            payload.repositories.page_info.has_next_page,
+            payload.repositories.page_info.end_cursor,
+        ) {
             (true, Some(cursor)) => after = Some(cursor),
             _ => break,
         }
@@ -286,11 +291,18 @@ pub fn collect_weeks(agent: &ureq::Agent, token: &str, user: &GhUser) -> Vec<Lin
                     e.1 += w.d;
                 }
             }
-            None => eprintln!("lines: skipping {}/{} (stats unavailable)", user.login, repo.name),
+            None => eprintln!(
+                "lines: skipping {}/{} (stats unavailable)",
+                user.login, repo.name
+            ),
         }
     }
     agg.into_iter()
-        .map(|(date, (added, deleted))| LineWeek { date, added, deleted })
+        .map(|(date, (added, deleted))| LineWeek {
+            date,
+            added,
+            deleted,
+        })
         .collect()
 }
 

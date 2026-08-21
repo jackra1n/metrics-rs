@@ -35,7 +35,6 @@ pub fn top_languages(repos: &[GhRepo]) -> Vec<LangStat> {
         .take(TOP_N)
         .map(|(name, size)| LangStat {
             name: name.clone(),
-            size: *size,
             pct: *size as f64 / total as f64 * 100.0,
             color: resolve_color(name),
         })
@@ -44,7 +43,6 @@ pub fn top_languages(repos: &[GhRepo]) -> Vec<LangStat> {
     if rest > 0 {
         out.push(LangStat {
             name: "Other".to_string(),
-            size: rest,
             pct: rest as f64 / total as f64 * 100.0,
             color: OTHER_COLOR,
         });

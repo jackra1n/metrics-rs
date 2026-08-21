@@ -12,7 +12,6 @@ pub struct GhUser {
     pub name: Option<String>,
     pub bio: Option<String>,
     pub avatar_url: String,
-    pub created_at: String,
     pub followers: u64,
     pub following: u64,
     pub repos_total: u64,
@@ -36,7 +35,6 @@ pub struct LineWeek {
 
 pub struct LangStat {
     pub name: String,
-    pub size: u64,
     pub pct: f64,
     pub color: &'static str,
 }
