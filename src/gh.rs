@@ -292,3 +292,16 @@ pub fn collect_weeks(agent: &ureq::Agent, token: &str, user: &GhUser) -> Vec<Lin
         .map(|(date, (added, deleted))| LineWeek { date, added, deleted })
         .collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn iso_date_known_vector() {
+        assert_eq!(iso_date(86_400), "1970-01-02");
+        assert_eq!(iso_date(1_759_622_400), "2025-10-05");
+        assert_eq!(iso_date(0), "1970-01-01");
+        assert_eq!(iso_date(1_759_622_400 + 86_400 * 365), "2026-10-05");
+    }
+}

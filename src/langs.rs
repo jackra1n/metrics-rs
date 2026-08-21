@@ -51,3 +51,64 @@ pub fn top_languages(repos: &[GhRepo]) -> Vec<LangStat> {
     }
     out
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::GhRepo;
+
+    fn repo(langs: Vec<(&str, u64)>) -> GhRepo {
+        GhRepo {
+            name: "r".into(),
+            stars: 0,
+            forks: 0,
+            open_issues: 0,
+            langs: langs.into_iter().map(|(n, s)| (n.to_string(), s)).collect(),
+        }
+    }
+
+    #[test]
+    fn merges_and_tie_breaks_by_name() {
+        let repos = vec![
+            repo(vec![("Rust", 100), ("Shell", 50)]),
+            repo(vec![("Rust", 100), ("Shell", 50)]),
+        ];
+        let out = top_languages(&repos);
+        assert_eq!(out.len(), 2);
+        // equal totals -> alphabetical tie-break
+        assert_eq!(out[0].name, "Rust");
+        assert_eq!(out[1].name, "Shell");
+        assert!((out[0].pct - 200.0 / 3.0).abs() < 1e-9);
+        assert!((out[1].pct - 100.0 / 3.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn rust_resolves_linguist_color_from_bundled_table() {
+        let repos = vec![repo(vec![("Rust", 10)])];
+        let out = top_languages(&repos);
+        assert_eq!(out[0].color, "#dea584");
+    }
+
+    #[test]
+    fn unknown_language_falls_back() {
+        assert_eq!(resolve_color("Not A Real Language"), FALLBACK_COLOR);
+    }
+
+    #[test]
+    fn remainder_becomes_other() {
+        let repos = vec![
+            repo(vec![("A", 10), ("B", 10), ("C", 10), ("D", 10)]),
+            repo(vec![("E", 10), ("F", 10), ("G", 10), ("H", 10), ("I", 10)]),
+        ];
+        let out = top_languages(&repos);
+        assert_eq!(out.len(), 9); // 8 + Other
+        assert_eq!(out[8].name, "Other");
+        assert_eq!(out[8].color, OTHER_COLOR);
+        assert!((out[8].pct - (10.0 / 90.0 * 100.0)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn empty_input_yields_empty() {
+        assert!(top_languages(&[]).is_empty());
+    }
+}

@@ -32,11 +32,14 @@ pub fn esc(s: &str) -> String {
 /// Compact number: >=1e6 -> `1.5m`, >=1e3 -> `1.2k` (trailing `.0` trimmed),
 /// else plain integer.
 pub fn fmt(n: u64) -> String {
-    let trim = |s: String| s.trim_end_matches('0').trim_end_matches('.').to_string();
+    let compact = |v: f64, suffix: &str| {
+        let s = format!("{:.1}", v).trim_end_matches('0').trim_end_matches('.').to_string();
+        format!("{s}{suffix}")
+    };
     if n >= 1_000_000 {
-        trim(format!("{:.1}m", n as f64 / 1_000_000.0))
+        compact(n as f64 / 1_000_000.0, "m")
     } else if n >= 1_000 {
-        trim(format!("{:.1}k", n as f64 / 1_000.0))
+        compact(n as f64 / 1_000.0, "k")
     } else {
         n.to_string()
     }
@@ -84,29 +87,21 @@ fn wrap(s: &str, width: usize, max_lines: usize) -> Vec<String> {
             .nth(width)
             .map(|(i, _)| i)
             .unwrap_or(rest.len());
-        let head = &rest[..cut];
-        if head.len() == rest.len() {
+        if cut >= rest.len() {
             lines.push(rest.to_string());
-            break;
+            return lines;
         }
-        match head.rfind(' ') {
-            Some(sp) if sp > width / 4 => {
-                lines.push(head[..sp].to_string());
-                rest = rest[sp + 1..].trim_start();
-            }
-            _ => {
-                // token longer than the line: hard-cut; ellipsis when this
-                // is the last allowed line
-                let take = if lines.len() == max_lines - 1 { cut - 1 } else { cut };
-                lines.push(rest[..take].to_string());
-                rest = rest[take..].trim_start();
-                if lines.len() == max_lines - 1 && !rest.is_empty() {
-                    if let Some(last) = lines.last_mut() {
-                        last.push('…');
-                    }
-                    rest = "";
-                }
-            }
+        let head = &rest[..cut];
+        let take = match head.rfind(' ') {
+            Some(sp) if sp > width / 4 => sp,
+            _ => cut,
+        };
+        lines.push(rest[..take].trim_end().to_string());
+        rest = rest[take..].trim_start();
+    }
+    if !rest.is_empty() {
+        if let Some(last) = lines.last_mut() {
+            last.push('…');
         }
     }
     lines
@@ -320,4 +315,81 @@ pub fn render(p: &Profile) -> String {
     svg.push_str(&b.body);
     svg.push_str("</g>\n</svg>\n");
     svg
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::{GhRepo, GhUser, LangStat, LineWeek, Profile};
+
+    fn profile() -> Profile {
+        Profile {
+            user: GhUser {
+                login: "jackra1n".into(),
+                name: Some("Jack & <Friends>".into()),
+                bio: Some("line one
+and more".into()),
+                avatar_url: "https://avatars.githubusercontent.com/u/1?v=4".into(),
+                created_at: "2020-01-01T00:00:00Z".into(),
+                followers: 1234,
+                following: 42,
+                repos_total: 2,
+                repos: vec![GhRepo {
+                    name: "r".into(),
+                    stars: 7,
+                    forks: 3,
+                    open_issues: 1,
+                    langs: vec![],
+                }],
+            },
+            stars: 7,
+            forks: 3,
+            open_issues: 1,
+            languages: vec![LangStat { name: "Rust".into(), size: 10, pct: 100.0, color: "#dea584" }],
+            weeks: vec![
+                LineWeek { date: "2025-09-28".into(), added: 10, deleted: 2 },
+                LineWeek { date: "2025-10-05".into(), added: 20, deleted: 4 },
+            ],
+        }
+    }
+
+    #[test]
+    fn fmt_boundaries() {
+        assert_eq!(fmt(999), "999");
+        assert_eq!(fmt(1234), "1.2k");
+        assert_eq!(fmt(1500000), "1.5m");
+        assert_eq!(fmt(1_000_000), "1m");
+        assert_eq!(fmt(1000), "1k");
+    }
+
+    #[test]
+    fn esc_escapes_all_metacharacters() {
+        assert_eq!(esc("&<a>"), "&amp;&lt;a&gt;");
+        assert_eq!(esc("\"'"), "&quot;&#39;");
+    }
+
+    #[test]
+    fn wrap_normalizes_and_truncates() {
+        assert_eq!(wrap("a\r\nb  c", 10, 2).join("|"), "a b c");
+        let long = "word ".repeat(40);
+        let lines = wrap(&long, 52, 2);
+        assert_eq!(lines.len(), 2);
+        assert!(lines[1].ends_with('…'));
+    }
+
+    #[test]
+    fn render_shape_and_escaping() {
+        let svg = render(&profile());
+        assert!(svg.starts_with("<svg xmlns=\"http://www.w3.org/2000/svg\""));
+        assert!(svg.contains("#0d1117"));
+        assert!(svg.contains("Jack &amp; &lt;Friends&gt;"));
+        // bio newline normalized away by wrap()
+        assert!(svg.lines().filter(|l| l.contains("line one")).count() == 1);
+        assert!(svg.ends_with("</svg>\n"));
+    }
+
+    #[test]
+    fn render_deterministic() {
+        assert_eq!(render(&profile()), render(&profile()));
+    }
 }
