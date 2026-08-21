@@ -69,6 +69,7 @@ pub fn graphql(
 }
 
 #[derive(Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
 struct TotalCount {
     #[serde(default)]
     total_count: u64,
