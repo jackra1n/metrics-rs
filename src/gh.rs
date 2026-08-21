@@ -198,21 +198,97 @@ pub fn fetch_profile(
     Ok(user.ok_or_else(|| format!("user not found: {login}"))?)
 }
 
+/// GET /repos/{owner}/{repo}/stats/contributors.
+/// 202 => GitHub still computing (caller retries); 200 array => Some;
+/// anything else (404 stats-disabled, 403) => None: skip, not fatal.
+/// Weeks are pre-filtered to `login` (case-insensitive) at the source.
 pub fn contributors_stats(
-    _agent: &ureq::Agent,
-    _token: &str,
-    _owner: &str,
-    _repo: &str,
+    agent: &ureq::Agent,
+    token: &str,
+    owner: &str,
+    repo: &str,
+    login: &str,
 ) -> Result<Option<Vec<ContribWeek>>, Box<dyn std::error::Error>> {
-    unimplemented!()
+    let url = format!("https://api.github.com/repos/{owner}/{repo}/stats/contributors");
+    let mut res = agent
+        .get(&url)
+        .header("Authorization", &format!("Bearer {token}"))
+        .header("Accept", "application/vnd.github+json")
+        .header("X-GitHub-Api-Version", "2022-11-28")
+        .call()?;
+    let status = res.status().as_u16();
+    if status != 200 {
+        // 202 = still computing; 404/403 = stats unavailable.
+        return Ok(None);
+    }
+    let entries: Vec<serde_json::Value> = res.body_mut().read_json()?;
+    let mut out = Vec::new();
+    for entry in entries {
+        let author = entry["author"]["login"].as_str().unwrap_or_default();
+        if !author.eq_ignore_ascii_case(login) {
+            continue;
+        }
+        if let Some(weeks) = entry["weeks"].as_array() {
+            for w in weeks {
+                out.push(ContribWeek {
+                    w: w["w"].as_u64().unwrap_or(0),
+                    a: w["a"].as_u64().unwrap_or(0),
+                    d: w["d"].as_u64().unwrap_or(0),
+                });
+            }
+        }
+    }
+    Ok(Some(out))
 }
 
 /// UTC calendar date (YYYY-MM-DD) from unix seconds; pure civil-from-days math.
 pub fn iso_date(unix_secs: u64) -> String {
-    unimplemented!()
+    let days = (unix_secs / 86_400) as i64;
+    // Howard Hinnant's civil_from_days; 1970-01-01 = day 0.
+    let z = days + 719_468;
+    let era = if z >= 0 { z } else { z - 146_096 } / 146_097;
+    let doe = z - era * 146_097;
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146_096) / 365;
+    let y = yoe + era * 400;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = if m <= 2 { y + 1 } else { y };
+    format!("{y:04}-{m:02}-{d:02}")
 }
 
-pub fn collect_weeks(_agent: &ureq::Agent, _token: &str, _user: &GhUser) -> Vec<LineWeek> {
-    let _ = BTreeMap::<String, (u64, u64)>::new();
-    Vec::new()
+const STATS_ATTEMPTS: usize = 12;
+
+/// Per-repo contributors stats with 202 backoff (12 x 2s), aggregated to
+/// weekly added/deleted for the profile user only. Unavailable stats warn.
+pub fn collect_weeks(agent: &ureq::Agent, token: &str, user: &GhUser) -> Vec<LineWeek> {
+    let mut agg: BTreeMap<String, (u64, u64)> = BTreeMap::new();
+    for repo in &user.repos {
+        let mut got: Option<Vec<ContribWeek>> = None;
+        for _attempt in 0..STATS_ATTEMPTS {
+            match contributors_stats(agent, token, &user.login, &repo.name, &user.login) {
+                Ok(Some(weeks)) => {
+                    got = Some(weeks);
+                    break;
+                }
+                Ok(None) => std::thread::sleep(Duration::from_secs(2)),
+                Err(_) => break,
+            }
+        }
+        match got {
+            Some(weeks) => {
+                for w in weeks {
+                    let date = iso_date(w.w);
+                    let e = agg.entry(date).or_insert((0, 0));
+                    e.0 += w.a;
+                    e.1 += w.d;
+                }
+            }
+            None => eprintln!("lines: skipping {}/{} (stats unavailable)", user.login, repo.name),
+        }
+    }
+    agg.into_iter()
+        .map(|(date, (added, deleted))| LineWeek { date, added, deleted })
+        .collect()
 }
