@@ -253,9 +253,9 @@ pub fn render(p: &Profile) -> String {
         let row = i / 4;
         let lx = XS[col];
         let ly = b.y + row as f64 * 44.0;
-        b.push(icon(label, lx + 1.0, ly - 8.0, MUTED));
+        b.push(icon(label, lx + 1.0, ly - 9.0, MUTED));
         b.push(text(lx + 15.0, ly, 9, MUTED, label));
-        b.push(bold(lx + 15.0, ly + 18.0, 15, TEXT, &value));
+        b.push(bold(lx + 1.0, ly + 18.0, 15, TEXT, &value));
     }
     b.y += 88.0;
 
@@ -266,19 +266,26 @@ pub fn render(p: &Profile) -> String {
     ));
     b.y += 14.0;
 
-    // faint analysis-meta line: what the numbers above were computed over
+    // languages section
+    b.push(text(X0, b.y, 9, MUTED, "LANGUAGES"));
+    b.y += 13.0;
+
+    // faint analysis-meta line: what the numbers above were computed over,
+    // centered directly above the language bar
     let meta = format!(
         "analyzed {} repos · {} · {} commits",
         p.user.repos_total,
         fmt_storage(p.storage_kb),
         fmt(p.lines.commits),
     );
-    b.push(text(X0, b.y + 9.0, 8, MUTED, &meta));
-    b.y += 18.0;
-
-    // languages section
-    b.push(text(X0, b.y, 9, MUTED, "LANGUAGES"));
-    b.y += 14.0;
+    b.push(format!(
+        r#"  <text x="{}" y="{}" text-anchor="middle" font-size="8" fill="{m}">{m2}</text>"#,
+        coord(W as f64 / 2.0),
+        coord(b.y + 7.0),
+        m = MUTED,
+        m2 = esc(&meta),
+    ));
+    b.y += 15.0;
 
     if p.languages.is_empty() {
         b.push(text(
