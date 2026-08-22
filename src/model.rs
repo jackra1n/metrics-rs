@@ -40,6 +40,15 @@ pub struct LineTotals {
     pub commits: u64,
 }
 
+/// Last-14-day commit activity for the mini contribution graph.
+#[derive(Default)]
+pub struct Activity {
+    /// (YYYY-MM-DD, commit count) for the last 14 days, oldest first
+    pub days: Vec<(String, u64)>,
+    /// distinct repos with commit contributions in the same window
+    pub repos: u64,
+}
+
 pub struct LangStat {
     pub name: String,
     pub pct: f64,
@@ -57,5 +66,6 @@ pub struct Profile {
     /// most common license across repos by count
     pub preferred_license: Option<String>,
     pub languages: Vec<LangStat>,
+    pub activity: Activity,
     pub lines: LineTotals,
 }

@@ -5,6 +5,21 @@
   <image href="https://avatars.githubusercontent.com/u/45038833?u=5beb8eaaeb3c03ec83617fca1a13ef7e7c8d2053&amp;v=4" x="26" y="26" width="20" height="20" clip-path="url(#av)"/>
   <text x="56" y="34" font-size="14" font-weight="bold" fill="#e6edf3">jackra1n</text>
   <text x="56" y="50" font-size="10" fill="#8b949e">joined 7y ago</text>
+  <rect x="313" y="28" width="8" height="8" rx="2" fill="#161b22"/>
+  <rect x="324" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="335" y="28" width="8" height="8" rx="2" fill="#161b22"/>
+  <rect x="346" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="357" y="28" width="8" height="8" rx="2" fill="#006d32"/>
+  <rect x="368" y="28" width="8" height="8" rx="2" fill="#26a641"/>
+  <rect x="379" y="28" width="8" height="8" rx="2" fill="#39d353"/>
+  <rect x="390" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="401" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="412" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="423" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="434" y="28" width="8" height="8" rx="2" fill="#26a641"/>
+  <rect x="445" y="28" width="8" height="8" rx="2" fill="#006d32"/>
+  <rect x="456" y="28" width="8" height="8" rx="2" fill="#161b22"/>
+  <text x="464" y="50" text-anchor="end" font-size="8" fill="#8b949e">contributed to 4 repositories</text>
   <line x1="16" y1="80" x2="464" y2="80" stroke="#21262d"/>
   <g transform="translate(17,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></g>
   <text x="31" y="96" font-size="9" fill="#8b949e">LICENSE</text>

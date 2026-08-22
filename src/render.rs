@@ -224,6 +224,37 @@ pub fn render(p: &Profile) -> String {
         MUTED,
         &format!("joined {}", joined_age(&p.user.created_at, now)),
     ));
+
+    // mini contribution graph, right-aligned in the header band:
+    // 14 day-squares, GitHub-dark heat colors
+    if !p.activity.days.is_empty() {
+        const LEVELS: [&str; 5] = [
+            "#161b22", "#0e4429", "#006d32", "#26a641", "#39d353",
+        ];
+        const SQ: f64 = 8.0;
+        const GAP: f64 = 3.0;
+        let n = p.activity.days.len() as f64;
+        let gx = X1 - (n * SQ + (n - 1.0) * GAP);
+        let max = p.activity.days.iter().map(|(_, c)| *c).max().unwrap_or(1).max(1);
+        for (i, (_, c)) in p.activity.days.iter().enumerate() {
+            let level = if *c == 0 {
+                0
+            } else {
+                1 + (*c * 3 / max) as usize
+            };
+            b.push(format!(
+                r#"  <rect x="{x}" y="28" width="8" height="8" rx="2" fill="{fill}"/>"#,
+                x = coord(gx + i as f64 * (SQ + GAP)),
+                fill = LEVELS[level.min(4)],
+            ));
+        }
+        b.push(format!(
+            r#"  <text x="{}" y="50" text-anchor="end" font-size="8" fill="{f}">contributed to {} repositories</text>"#,
+            coord(X1),
+            p.activity.repos,
+            f = MUTED,
+        ));
+    }
     b.y += 64.0;
 
     // divider
@@ -378,7 +409,7 @@ pub fn render(p: &Profile) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{GhRepo, GhUser, LangStat, LineTotals, Profile};
+    use crate::model::{Activity, GhRepo, GhUser, LangStat, LineTotals, Profile};
 
     fn profile() -> Profile {
         Profile {
@@ -411,6 +442,12 @@ mod tests {
                 pct: 100.0,
                 color: "#dea584",
             }],
+            activity: Activity {
+                days: (0..14)
+                    .map(|i| (format!("2026-08-{i:02}"), if i % 3 == 0 { 5 } else { 0 }))
+                    .collect(),
+                repos: 4,
+            },
             lines: LineTotals {
                 added: 1234,
                 deleted: 56_000,
@@ -468,6 +505,8 @@ mod tests {
         ] {
             assert!(svg.contains(label), "missing {label}");
         }
+        assert!(svg.contains("contributed to 4 repositories"));
+        assert!(svg.contains("#39d353"), "heat colors missing");
         assert!(!svg.contains("followers • "));
         // the old chart polygons carried opacity; icons don't
         assert!(!svg.contains("opacity"), "stale chart polygon");

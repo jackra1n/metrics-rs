@@ -271,7 +271,6 @@ pub fn contributors_stats(
 }
 
 /// UTC calendar date (YYYY-MM-DD) from unix seconds; pure civil-from-days math.
-#[allow(dead_code)] // retained: date math used by tests and future windows
 pub fn iso_date(unix_secs: u64) -> String {
     let days = (unix_secs / 86_400) as i64;
     // Howard Hinnant's civil_from_days; 1970-01-01 = day 0.
@@ -286,6 +285,66 @@ pub fn iso_date(unix_secs: u64) -> String {
     let m = if mp < 10 { mp + 3 } else { mp - 9 };
     let y = if m <= 2 { y + 1 } else { y };
     format!("{y:04}-{m:02}-{d:02}")
+}
+
+/// Last-14-day commit contributions for the mini contribution graph:
+/// per-day counts plus distinct repos committed to in the window.
+pub fn fetch_activity(
+    agent: &ureq::Agent,
+    token: &str,
+    login: &str,
+    now_secs: u64,
+) -> Result<crate::model::Activity, Box<dyn std::error::Error>> {
+    const ACTIVITY_QUERY: &str = r#"query($login:String!,$from:DateTime!,$to:DateTime!){
+user(login:$login){
+contributionsCollection(from:$from,to:$to){
+contributionCalendar{weeks{contributionDays{date contributionCount}}}
+commitContributionsByRepository{repository{name}}
+}
+}
+}"#;
+    // window: start of the day 13 days ago .. now (14 days inclusive)
+    let from = format!("{}T00:00:00Z", iso_date(now_secs.saturating_sub(13 * 86_400)));
+    let to = format!("{}T23:59:59Z", iso_date(now_secs));
+    let v = graphql(
+        agent,
+        token,
+        ACTIVITY_QUERY,
+        json!({ "login": login, "from": from, "to": to }),
+    )?;
+    let cc = &v["data"]["user"]["contributionsCollection"];
+    if cc.is_null() {
+        return Err(format!("activity not found: {login}").into());
+    }
+    let mut by_date = std::collections::BTreeMap::<String, u64>::new();
+    if let Some(weeks) = cc["contributionCalendar"]["weeks"].as_array() {
+        for w in weeks {
+            if let Some(days) = w["contributionDays"].as_array() {
+                for d in days {
+                    if let (Some(date), Some(n)) =
+                        (d["date"].as_str(), d["contributionCount"].as_u64())
+                    {
+                        *by_date.entry(date.to_string()).or_insert(0) += n;
+                    }
+                }
+            }
+        }
+    }
+    let days = (0..14usize)
+        .rev()
+        .map(|i| {
+            let date = iso_date(now_secs.saturating_sub(i as u64 * 86_400));
+            let count = by_date.get(&date).copied().unwrap_or(0);
+            (date, count)
+        })
+        .collect();
+    Ok(crate::model::Activity {
+        days,
+        repos: cc["commitContributionsByRepository"]
+            .as_array()
+            .map(|a| a.len() as u64)
+            .unwrap_or(0),
+    })
 }
 
 const STATS_ATTEMPTS: usize = 12;

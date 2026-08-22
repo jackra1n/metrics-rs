@@ -33,12 +33,22 @@ fn preferred_license(repos: &[model::GhRepo]) -> Option<String> {
 fn run(args: &Args) -> Result<model::Profile, Box<dyn std::error::Error>> {
     let agent = gh::agent();
     let user = gh::fetch_profile(&agent, &args.token, &args.username)?;
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
     eprintln!(
         "lines: aggregating weekly stats for {} repos",
         user.repos.len()
     );
     let lines = gh::collect_lines(&agent, &args.token, &user);
     let languages = langs::top_languages(&user.repos);
+    // non-fatal: private/no-contribution profiles just get an empty graph
+    let activity = gh::fetch_activity(&agent, &args.token, &args.username, now)
+        .unwrap_or_else(|e| {
+            eprintln!("activity: {e}");
+            model::Activity::default()
+        });
     let sum = |f: fn(&model::GhRepo) -> u64| user.repos.iter().map(f).sum();
     Ok(model::Profile {
         stars: sum(|r| r.stars),
@@ -48,6 +58,7 @@ fn run(args: &Args) -> Result<model::Profile, Box<dyn std::error::Error>> {
         storage_kb: sum(|r| r.disk_usage_kb),
         preferred_license: preferred_license(&user.repos),
         languages,
+        activity,
         lines,
         user,
     })
