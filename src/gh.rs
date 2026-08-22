@@ -3,6 +3,29 @@ use serde::Deserialize;
 use serde_json::{Value, json};
 use std::time::Duration;
 
+/// Full `owner/repo` names for --indepth analysis: all owned repositories
+/// plus repositories with recent contribution activity, deduplicated
+/// case-insensitively.
+pub fn indepth_targets(user: &GhUser, activity: &crate::model::Activity) -> Vec<String> {
+    let mut seen = std::collections::HashSet::new();
+    let mut targets = Vec::new();
+    let mut add = |full_name: &str| {
+        let key = full_name.to_ascii_lowercase();
+        if seen.insert(key) {
+            targets.push(full_name.to_string());
+        }
+    };
+    for repo in &user.repos {
+        add(&format!("{}/{}", user.login, repo.name));
+    }
+    for repo in &activity.contrib_repos {
+        if !repo.name_with_owner.is_empty() {
+            add(&repo.name_with_owner);
+        }
+    }
+    targets
+}
+
 const GRAPHQL_URL: &str = "https://api.github.com/graphql";
 
 /// Live-validated query: owner repos only, no forks, newest first, 100/page.
@@ -307,7 +330,10 @@ contributions(first:1){totalCount}
 }
 }"#;
     // window: start of the day 13 days ago .. now (14 days inclusive)
-    let from = format!("{}T00:00:00Z", iso_date(now_secs.saturating_sub(13 * 86_400)));
+    let from = format!(
+        "{}T00:00:00Z",
+        iso_date(now_secs.saturating_sub(13 * 86_400))
+    );
     let to = format!("{}T23:59:59Z", iso_date(now_secs));
     let v = graphql(
         agent,

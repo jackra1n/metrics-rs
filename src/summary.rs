@@ -29,6 +29,58 @@ pub fn fmt_bytes(bytes: u64) -> String {
     }
 }
 
+fn print_indepth_summary(stats: &crate::model::IndepthStats) {
+    println!("\n[Languages Breakdown (In-Depth Author Commits)]");
+    println!(
+        "  Authored lines: +{} / −{} across {} of {} repositories ({} commits)",
+        stats.added, stats.deleted, stats.repos_analyzed, stats.repos_total, stats.commits,
+    );
+    if !stats.ignored.is_empty() {
+        println!("  Ignored languages: {}", stats.ignored.join(", "));
+    }
+    if stats.repos_analyzed < stats.repos_total {
+        println!(
+            "  Skipped repositories: {}",
+            stats.repos_total - stats.repos_analyzed
+        );
+    }
+
+    let total_lines: u64 = stats.lines_by_lang.values().sum();
+    if total_lines == 0 {
+        println!("  (no authored code lines matched)");
+        println!();
+        return;
+    }
+
+    let mut ranked: Vec<(String, u64)> = stats
+        .lines_by_lang
+        .iter()
+        .map(|(language, lines)| (language.clone(), *lines))
+        .collect();
+    ranked.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+    for (language, lines) in ranked {
+        let percentage = lines as f64 / total_lines as f64 * 100.0;
+        println!("  • {language}: {lines} lines added ({percentage:.1}%)");
+        if let Some(repositories) = stats.repos_by_lang.get(&language) {
+            for repository in repositories.iter().take(5) {
+                println!("      - {repository}");
+            }
+            if repositories.len() > 5 {
+                println!(
+                    "      - ... and {} more repositor{}",
+                    repositories.len() - 5,
+                    if repositories.len() - 5 == 1 {
+                        "y"
+                    } else {
+                        "ies"
+                    }
+                );
+            }
+        }
+    }
+    println!();
+}
+
 /// Print comprehensive stdout breakdown of all statistics and repo impacts.
 pub fn print_summary(p: &Profile) {
     println!("\n=== metrics-rs summary for {} ===", p.user.login);
@@ -87,7 +139,10 @@ pub fn print_summary(p: &Profile) {
         println!("    (no repository commit contributions in this window)");
     } else {
         for cr in &p.activity.contrib_repos {
-            let is_external = !cr.name_with_owner.to_lowercase().starts_with(&format!("{}/", p.user.login.to_lowercase()));
+            let is_external = !cr
+                .name_with_owner
+                .to_lowercase()
+                .starts_with(&format!("{}/", p.user.login.to_lowercase()));
             let ext_tag = if is_external { " [external]" } else { "" };
             println!(
                 "    • {}: {} commit{}{}",
@@ -97,6 +152,11 @@ pub fn print_summary(p: &Profile) {
                 ext_tag
             );
         }
+    }
+
+    if let Some(stats) = p.indepth.as_ref() {
+        print_indepth_summary(stats);
+        return;
     }
 
     // 3. Languages Breakdown & Repo Impact
@@ -117,7 +177,8 @@ pub fn print_summary(p: &Profile) {
             entry.1.push((&repo.name, *bytes));
         }
         if repo_total > 0 {
-            let mut rlangs: Vec<(&str, u64)> = repo.langs.iter().map(|(l, b)| (l.as_str(), *b)).collect();
+            let mut rlangs: Vec<(&str, u64)> =
+                repo.langs.iter().map(|(l, b)| (l.as_str(), *b)).collect();
             rlangs.sort_by(|a, b| b.1.cmp(&a.1));
             repo_code_map.insert(&repo.name, (repo_total, rlangs));
         }
@@ -143,12 +204,7 @@ pub fn print_summary(p: &Profile) {
         println!("\n  Language share in the languages bar & top contributing repos:");
         for (lang, bytes, repos) in &ranked_langs {
             let overall_pct = *bytes as f64 / total_code_bytes as f64 * 100.0;
-            println!(
-                "  • {}: {:.1}% ({})",
-                lang,
-                overall_pct,
-                fmt_bytes(*bytes)
-            );
+            println!("  • {}: {:.1}% ({})", lang, overall_pct, fmt_bytes(*bytes));
             // Show top contributing repos for this language
             for (rname, rbytes) in repos.iter().take(3) {
                 let lang_share = *rbytes as f64 / *bytes as f64 * 100.0;

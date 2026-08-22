@@ -228,14 +228,19 @@ pub fn render(p: &Profile) -> String {
     // mini contribution graph, right-aligned in the header band:
     // 14 day-squares, GitHub-dark heat colors
     if !p.activity.days.is_empty() {
-        const LEVELS: [&str; 5] = [
-            "#161b22", "#0e4429", "#006d32", "#26a641", "#39d353",
-        ];
+        const LEVELS: [&str; 5] = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"];
         const SQ: f64 = 8.0;
         const GAP: f64 = 3.0;
         let n = p.activity.days.len() as f64;
         let gx = X1 - (n * SQ + (n - 1.0) * GAP);
-        let max = p.activity.days.iter().map(|(_, c)| *c).max().unwrap_or(1).max(1);
+        let max = p
+            .activity
+            .days
+            .iter()
+            .map(|(_, c)| *c)
+            .max()
+            .unwrap_or(1)
+            .max(1);
         for (i, (_, c)) in p.activity.days.iter().enumerate() {
             let level = if *c == 0 {
                 0
@@ -454,6 +459,7 @@ mod tests {
                 deleted: 56_000,
                 commits: 890,
             },
+            indepth: None,
         }
     }
 

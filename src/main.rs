@@ -1,5 +1,6 @@
 mod cli;
 mod gh;
+mod indepth;
 mod langs;
 mod model;
 mod render;
@@ -38,18 +39,45 @@ fn run(args: &Args) -> Result<model::Profile, Box<dyn std::error::Error>> {
         .duration_since(std::time::UNIX_EPOCH)
         .map(|d| d.as_secs())
         .unwrap_or(0);
-    eprintln!(
-        "lines: aggregating weekly stats for {} repos",
-        user.repos.len()
-    );
-    let lines = gh::collect_lines(&agent, &args.token, &user);
-    let languages = langs::top_languages(&user.repos);
     // non-fatal: private/no-contribution profiles just get an empty graph
-    let activity = gh::fetch_activity(&agent, &args.token, &args.username, now)
-        .unwrap_or_else(|e| {
+    let activity =
+        gh::fetch_activity(&agent, &args.token, &args.username, now).unwrap_or_else(|e| {
             eprintln!("activity: {e}");
             model::Activity::default()
         });
+
+    let (languages, lines, indepth_stats) = if args.indepth {
+        let targets = gh::indepth_targets(&user, &activity);
+        eprintln!(
+            "indepth: analyzing authored commits across {} repositories in parallel...",
+            targets.len()
+        );
+        let identities = indepth::author_identities(&user.login, user.name.as_deref());
+        let results =
+            indepth::analyze_all(&args.token, &targets, &identities, &args.ignored_languages);
+        let stats = indepth::merge(&results, &args.ignored_languages, targets.len());
+        let lines = model::LineTotals {
+            added: stats.added,
+            deleted: stats.deleted,
+            commits: stats.commits,
+        };
+        (
+            langs::top_languages_from_lines(&stats.lines_by_lang),
+            lines,
+            Some(stats),
+        )
+    } else {
+        eprintln!(
+            "lines: aggregating weekly stats for {} repos",
+            user.repos.len()
+        );
+        (
+            langs::top_languages(&user.repos),
+            gh::collect_lines(&agent, &args.token, &user),
+            None,
+        )
+    };
+
     let sum = |f: fn(&model::GhRepo) -> u64| user.repos.iter().map(f).sum();
     Ok(model::Profile {
         stars: sum(|r| r.stars),
@@ -61,6 +89,7 @@ fn run(args: &Args) -> Result<model::Profile, Box<dyn std::error::Error>> {
         languages,
         activity,
         lines,
+        indepth: indepth_stats,
         user,
     })
 }

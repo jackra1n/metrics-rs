@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 pub struct GhRepo {
     pub name: String,
     pub stars: u64,
@@ -77,4 +79,28 @@ pub struct Profile {
     pub languages: Vec<LangStat>,
     pub activity: Activity,
     pub lines: LineTotals,
+    /// populated only in --indepth mode: authored-commit language stats
+    pub indepth: Option<IndepthStats>,
+}
+
+/// Aggregated in-depth analysis of the user's authored commits, derived from
+/// bare git clones and `git log --numstat` rather than repo byte totals.
+#[derive(Default)]
+pub struct IndepthStats {
+    /// language name -> authored lines added (programming/markup only)
+    pub lines_by_lang: BTreeMap<String, u64>,
+    /// language name -> repo full names (owner/repo) contributing those lines
+    pub repos_by_lang: BTreeMap<String, Vec<String>>,
+    /// total authored lines added across all analyzed commits
+    pub added: u64,
+    /// total authored lines deleted across all analyzed commits
+    pub deleted: u64,
+    /// authored commits found across all analyzed repos
+    pub commits: u64,
+    /// repositories requested for analysis (owned + contributed)
+    pub repos_total: usize,
+    /// repositories that cloned and parsed successfully
+    pub repos_analyzed: usize,
+    /// languages excluded from the analysis (--ignore-languages)
+    pub ignored: Vec<String>,
 }
