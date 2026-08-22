@@ -2,7 +2,9 @@
 name = "metrics-rs"
 version = "0.1.0"
 edition = "2024"
-
+license = "AGPL-3.0-only"
+description = "Fast, lightweight GitHub profile metrics card generator in Rust"
+authors = ["jackra1n"]
 [dependencies]
 github-languages = "1.0.30"
 serde = { version = "1.0.229", features = ["derive"] }
