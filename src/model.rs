@@ -40,6 +40,13 @@ pub struct LineTotals {
     pub commits: u64,
 }
 
+#[derive(Clone, Debug, Default)]
+pub struct ContribRepo {
+    pub name: String,
+    pub name_with_owner: String,
+    pub commits: u64,
+}
+
 /// Last-14-day commit activity for the mini contribution graph.
 #[derive(Default)]
 pub struct Activity {
@@ -47,6 +54,8 @@ pub struct Activity {
     pub days: Vec<(String, u64)>,
     /// distinct repos with commit contributions in the same window
     pub repos: u64,
+    /// repositories contributed to in the same window with commit counts
+    pub contrib_repos: Vec<ContribRepo>,
 }
 
 pub struct LangStat {

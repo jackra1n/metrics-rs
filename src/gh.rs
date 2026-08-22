@@ -299,7 +299,10 @@ pub fn fetch_activity(
 user(login:$login){
 contributionsCollection(from:$from,to:$to){
 contributionCalendar{weeks{contributionDays{date contributionCount}}}
-commitContributionsByRepository{repository{name}}
+commitContributionsByRepository(maxRepositories:100){
+repository{name nameWithOwner}
+contributions(first:1){totalCount}
+}
 }
 }
 }"#;
@@ -338,12 +341,33 @@ commitContributionsByRepository{repository{name}}
             (date, count)
         })
         .collect();
+    let mut contrib_repos = Vec::new();
+    if let Some(repos_arr) = cc["commitContributionsByRepository"].as_array() {
+        for r in repos_arr {
+            let name = r["repository"]["name"]
+                .as_str()
+                .unwrap_or_default()
+                .to_string();
+            let name_with_owner = r["repository"]["nameWithOwner"]
+                .as_str()
+                .unwrap_or_default()
+                .to_string();
+            let commits = r["contributions"]["totalCount"].as_u64().unwrap_or(0);
+            if !name.is_empty() {
+                contrib_repos.push(crate::model::ContribRepo {
+                    name,
+                    name_with_owner,
+                    commits,
+                });
+            }
+        }
+    }
+    contrib_repos.sort_by(|a, b| b.commits.cmp(&a.commits).then(a.name.cmp(&b.name)));
+    let repos_count = contrib_repos.len() as u64;
     Ok(crate::model::Activity {
         days,
-        repos: cc["commitContributionsByRepository"]
-            .as_array()
-            .map(|a| a.len() as u64)
-            .unwrap_or(0),
+        repos: repos_count,
+        contrib_repos,
     })
 }
 

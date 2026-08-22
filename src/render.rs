@@ -447,6 +447,7 @@ mod tests {
                     .map(|i| (format!("2026-08-{i:02}"), if i % 3 == 0 { 5 } else { 0 }))
                     .collect(),
                 repos: 4,
+                contrib_repos: Vec::new(),
             },
             lines: LineTotals {
                 added: 1234,

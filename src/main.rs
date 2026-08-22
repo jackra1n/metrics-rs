@@ -3,7 +3,7 @@ mod gh;
 mod langs;
 mod model;
 mod render;
-
+mod summary;
 use crate::cli::Args;
 use std::collections::BTreeMap;
 
@@ -11,6 +11,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = cli::parse(std::env::args().collect())?;
     let profile = run(&args)?;
     std::fs::write(&args.output, render::render(&profile))?;
+    summary::print_summary(&profile);
     Ok(())
 }
 
