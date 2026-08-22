@@ -67,9 +67,9 @@ export GITHUB_TOKEN="ghp_your_token_here"
 
 ---
 
-## 🔄 GitHub Actions Workflow
+## 🔄 GitHub Actions Usage
 
-You can automate regenerating your profile card on a schedule or on push using GitHub Actions:
+You can use `metrics-rs` directly in your GitHub profile workflow with `uses: jackra1n/metrics-rs@master`:
 
 ```yaml
 name: Generate Metrics Card
@@ -90,16 +90,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Build metrics-rs
-        run: cargo build --release
-
       - name: Generate metrics SVG
-        run: ./target/release/metrics-rs ${{ github.repository_owner }} github-metrics.svg --indepth
-        env:
-          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}
+        uses: jackra1n/metrics-rs@master
+        with:
+          token: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}
+          filename: github-metrics.svg
+          indepth: yes
+          ignore_languages: swift,gdscript
 
       - name: Commit and push changes
         run: |
@@ -109,7 +106,15 @@ jobs:
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update metrics card" && git push)
 ```
 
----
+### Action Inputs
+
+| Input | Description | Default |
+| :--- | :--- | :--- |
+| `token` | GitHub Personal Access Token or `GITHUB_TOKEN` | `${{ github.token }}` |
+| `user` | Target username | `${{ github.repository_owner }}` |
+| `filename` | Destination path for the `.svg` | `github-metrics.svg` |
+| `indepth` | Run in-depth authored commit analysis (`yes` / `no`) | `no` |
+| `ignore_languages` | Comma-separated languages to exclude | `""` |
 
 ## 🧪 Running Tests
 

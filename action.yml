@@ -1,0 +1,51 @@
+name: "metrics-rs"
+description: "Fast, lightweight GitHub profile metrics card generator in Rust"
+author: "jackra1n"
+
+branding:
+  icon: "activity"
+  color: "blue"
+
+inputs:
+  token:
+    description: "GitHub Personal Access Token or GITHUB_TOKEN"
+    required: false
+    default: ${{ github.token }}
+  user:
+    description: "GitHub username to generate metrics for (defaults to repository owner)"
+    required: false
+    default: ${{ github.repository_owner }}
+  filename:
+    description: "Output filename / path for the generated SVG"
+    required: false
+    default: "github-metrics.svg"
+  indepth:
+    description: "Enable in-depth authored commit analysis across repositories (yes/no)"
+    required: false
+    default: "no"
+  ignore_languages:
+    description: "Comma-separated list of languages to exclude from ranking (e.g. swift,gdscript)"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run metrics-rs
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+        INPUT_USER: ${{ inputs.user }}
+        INPUT_FILENAME: ${{ inputs.filename }}
+        INPUT_INDEPTH: ${{ inputs.indepth }}
+        INPUT_IGNORE_LANGUAGES: ${{ inputs.ignore_languages }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        ARGS=("$INPUT_USER" "$INPUT_FILENAME")
+        if [[ "$INPUT_INDEPTH" =~ ^(yes|true|1)$ ]]; then
+          ARGS+=("--indepth")
+        fi
+        if [[ -n "$INPUT_IGNORE_LANGUAGES" ]]; then
+          ARGS+=("--ignore-languages" "$INPUT_IGNORE_LANGUAGES")
+        fi
+        cargo run --manifest-path "$ACTION_PATH/Cargo.toml" --release -- "${ARGS[@]}"
