@@ -33,6 +33,7 @@ pub const PROFILE_QUERY: &str = r#"query($login:String!,$after:String){
   user(login:$login){
     login name avatarUrl createdAt
     followers{totalCount} sponsors{totalCount}
+    repositoriesContributedTo(first:1,includeUserRepositories:true){totalCount}
     repositories(first:100,after:$after,ownerAffiliations:[OWNER],isFork:false,
                  orderBy:{field:UPDATED_AT,direction:DESC}){
       totalCount
@@ -171,6 +172,8 @@ struct UserPayload {
     #[serde(default)]
     sponsors: TotalCount,
     #[serde(default)]
+    repositories_contributed_to: TotalCount,
+    #[serde(default)]
     repositories: RepoConn,
 }
 
@@ -201,9 +204,11 @@ pub fn fetch_profile(
             created_at: payload.created_at.clone(),
             sponsors: payload.sponsors.total_count,
             repos_total: 0,
+            repos_contributed: payload.repositories_contributed_to.total_count,
             repos: Vec::new(),
         });
         u.repos_total = payload.repositories.total_count;
+        u.repos_contributed = payload.repositories_contributed_to.total_count;
         for n in payload.repositories.nodes {
             u.repos.push(GhRepo {
                 langs: n

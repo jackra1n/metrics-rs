@@ -89,7 +89,11 @@ pub fn print_summary(p: &Profile) {
     println!("\n[Profile & Stats]");
     let display_name = p.user.name.as_deref().unwrap_or(&p.user.login);
     println!("  User: {} ({})", display_name, p.user.login);
-    println!("  Analyzed repos: {} owned", p.user.repos.len());
+    println!(
+        "  Analyzed repos: {} owned · {} contributed (lifetime)",
+        p.user.repos.len(),
+        p.user.repos_contributed
+    );
     println!(
         "  Total disk storage: {}",
         crate::render::fmt(p.storage_kb / 1000) + "MB" // or fmt_bytes(p.storage_kb * 1024)
@@ -129,11 +133,10 @@ pub fn print_summary(p: &Profile) {
     }
 
     // 2. Recent Activity & "Contributed to X repositories"
-    println!("\n[Recent Activity (last 14 days)]");
     let total_14d_commits: u64 = p.activity.days.iter().map(|(_, c)| *c).sum();
     println!(
-        "  Total 14-day commits: {} across {} repositories:",
-        total_14d_commits, p.activity.repos
+        "  Total 14-day commits: {} across {} repositories (lifetime contributed: {}):",
+        total_14d_commits, p.activity.repos, p.user.repos_contributed
     );
     if p.activity.contrib_repos.is_empty() {
         println!("    (no repository commit contributions in this window)");

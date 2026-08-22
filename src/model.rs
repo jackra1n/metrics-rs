@@ -23,6 +23,7 @@ pub struct GhUser {
     /// sponsor count (sponsors of this user)
     pub sponsors: u64,
     pub repos_total: u64,
+    pub repos_contributed: u64,
     pub repos: Vec<GhRepo>,
 }
 

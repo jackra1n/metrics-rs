@@ -256,7 +256,7 @@ pub fn render(p: &Profile) -> String {
         b.push(format!(
             r#"  <text x="{}" y="50" text-anchor="end" font-size="8" fill="{f}">contributed to {} repositories</text>"#,
             coord(X1),
-            p.activity.repos,
+            p.user.repos_contributed,
             f = MUTED,
         ));
     }
@@ -425,6 +425,7 @@ mod tests {
                 avatar_url: "https://avatars.githubusercontent.com/u/1?v=4".into(),
                 sponsors: 3,
                 repos_total: 2,
+                repos_contributed: 45,
                 repos: vec![GhRepo {
                     name: "r".into(),
                     stars: 7,
@@ -512,7 +513,7 @@ mod tests {
         ] {
             assert!(svg.contains(label), "missing {label}");
         }
-        assert!(svg.contains("contributed to 4 repositories"));
+        assert!(svg.contains("contributed to 45 repositories"));
         assert!(svg.contains("#39d353"), "heat colors missing");
         assert!(!svg.contains("followers • "));
         // the old chart polygons carried opacity; icons don't
