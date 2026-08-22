@@ -44,7 +44,8 @@
   <text x="257" y="158" font-size="15" font-weight="bold" fill="#e6edf3">387.4MB</text>
   <g transform="translate(377,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></g>
   <text x="391" y="140" font-size="9" fill="#8b949e">LINES</text>
-  <text x="377" y="158" font-size="15" font-weight="bold" fill="#e6edf3">+674.4k −120k</text>
+  <text x="377" y="153" font-size="11" font-weight="bold" fill="#3fb950">+674.4k</text>
+  <text x="377" y="166" font-size="11" font-weight="bold" fill="#f85149">−120k</text>
   <line x1="16" y1="184" x2="464" y2="184" stroke="#21262d"/>
   <text x="16" y="198" font-size="9" fill="#8b949e">LANGUAGES</text>
   <text x="240" y="218" text-anchor="middle" font-size="8" fill="#8b949e">analyzed 58 repos · 387.4MB · 2.9k commits</text>

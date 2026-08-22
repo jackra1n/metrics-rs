@@ -278,10 +278,7 @@ pub fn render(p: &Profile) -> String {
         ("SPONSORS", fmt(p.user.sponsors)),
         ("RELEASES", fmt(p.releases)),
         ("STORAGE", fmt_storage(p.storage_kb)),
-        (
-            "LINES",
-            format!("+{} −{}", fmt(p.lines.added), fmt(p.lines.deleted)),
-        ),
+        ("LINES", String::new()),
     ];
     const XS: [f64; 4] = [16.0, 136.0, 256.0, 376.0];
     for (i, (label, value)) in facts.into_iter().enumerate() {
@@ -291,7 +288,24 @@ pub fn render(p: &Profile) -> String {
         let ly = b.y + row as f64 * 44.0;
         b.push(icon(label, lx + 1.0, ly - 9.0, MUTED));
         b.push(text(lx + 15.0, ly, 9, MUTED, label));
-        b.push(bold(lx + 1.0, ly + 18.0, 15, TEXT, &value));
+        if label == "LINES" {
+            b.push(format!(
+                r#"  <text x="{x}" y="{y}" font-size="11" font-weight="bold" fill="{color}">+{added}</text>"#,
+                x = coord(lx + 1.0),
+                y = coord(ly + 13.0),
+                color = "#3fb950",
+                added = fmt(p.lines.added),
+            ));
+            b.push(format!(
+                r#"  <text x="{x}" y="{y}" font-size="11" font-weight="bold" fill="{color}">−{deleted}</text>"#,
+                x = coord(lx + 1.0),
+                y = coord(ly + 26.0),
+                color = "#f85149",
+                deleted = fmt(p.lines.deleted),
+            ));
+        } else {
+            b.push(bold(lx + 1.0, ly + 18.0, 15, TEXT, &value));
+        }
     }
     b.y += 88.0;
 
