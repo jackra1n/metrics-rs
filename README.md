@@ -8,19 +8,19 @@ Designed as an efficient native alternative to heavy JavaScript/Chromium-based p
 
 ---
 
-## ✨ Features
+## Features
 
-- **⚡ Blazing Fast**: Single native compiled binary. Generates deterministic SVG cards in milliseconds (or ~30 seconds for complete `--indepth` commit analysis across 60+ repositories in parallel).
-- **🎨 Pure Vector SVG**: Emits clean, dark-theme SVG without spinning up Puppeteer, Headless Chrome, Docker, or Node.js.
-- **📊 Two Analysis Modes**:
+- **Blazing Fast**: Single native compiled binary. Generates deterministic SVG cards in milliseconds (~30 seconds for in-depth commit analysis across 60+ repositories in parallel).
+- **Pure Vector SVG**: Emits clean, dark-theme SVG without spinning up Puppeteer, Headless Chrome, Docker, or Node.js.
+- **Two Analysis Modes**:
   - **Fast API Mode** *(default)*: Instant calculation from GitHub GraphQL and REST endpoints.
   - **In-Depth Mode** (`--indepth`): Concurrent bare-clone analysis that inspects authored commit diffs to attribute exact lines added per language.
-- **🟩 14-Day Contribution Heatmap**: Mini GitHub-style activity grid in the header, paired with lifetime contributed repository counts.
-- **🈷️ GitHub Linguist Palette**: Bundled language colors and file classification matching GitHub Linguist, normalized across the top 8 languages.
-- **📈 Balanced Stat Grid**: Key stats (license, stars, watchers, forks, sponsors, releases, storage, and colored `+`/`−` lines) formatted for dark backgrounds.
+- **14-Day Contribution Heatmap**: Mini GitHub-style activity grid in the header, paired with lifetime contributed repository counts.
+- **GitHub Linguist Palette**: Bundled language colors and file classification matching GitHub Linguist, normalized across the top 8 languages.
+- **Balanced Stat Grid**: Key stats (license, stars, watchers, forks, sponsors, releases, storage, and colored `+`/`−` lines) formatted for dark backgrounds.
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 - [Rust](https://www.rust-lang.org/) (2024 edition / 1.85+)
@@ -35,7 +35,7 @@ cargo install --path .
 
 ---
 
-## 💻 Usage
+## Usage
 
 ```bash
 # Basic usage (reads token from GITHUB_TOKEN or GH_TOKEN)
@@ -63,7 +63,7 @@ metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --token "ghp_..."
 
 ---
 
-## 🔄 GitHub Actions Usage
+## GitHub Actions Usage
 
 You can use `metrics-rs` directly in your GitHub profile workflow with `uses: jackra1n/metrics-rs@master`:
 
