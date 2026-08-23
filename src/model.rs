@@ -96,9 +96,10 @@ pub struct IndepthStats {
     pub added: u64,
     /// total authored lines deleted across all analyzed commits
     pub deleted: u64,
+    /// total edited files encountered across all authored commits
+    pub files: u64,
     /// authored commits found across all analyzed repos
     pub commits: u64,
-    /// repositories requested for analysis (owned + contributed)
     pub repos_total: usize,
     /// repositories that cloned and parsed successfully
     pub repos_analyzed: usize,

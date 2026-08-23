@@ -32,8 +32,8 @@ pub fn fmt_bytes(bytes: u64) -> String {
 fn print_indepth_summary(stats: &crate::model::IndepthStats) {
     println!("\n[Languages Breakdown (In-Depth Author Commits)]");
     println!(
-        "  Authored lines: +{} / −{} across {} of {} repositories ({} commits)",
-        stats.added, stats.deleted, stats.repos_analyzed, stats.repos_total, stats.commits,
+        "  Authored lines: +{} / −{} in {} edited files across {} of {} repositories ({} commits)",
+        stats.added, stats.deleted, stats.files, stats.repos_analyzed, stats.repos_total, stats.commits,
     );
     if !stats.ignored.is_empty() {
         println!("  Ignored languages: {}", stats.ignored.join(", "));

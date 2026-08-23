@@ -29,6 +29,7 @@ pub struct RepoAnalysis {
     pub lines_by_lang: BTreeMap<String, u64>,
     pub added: u64,
     pub deleted: u64,
+    pub files: u64,
     pub commits: u64,
 }
 
@@ -125,6 +126,7 @@ pub fn analyze_repo(
         lines_by_lang: BTreeMap::new(),
         added: 0,
         deleted: 0,
+        files: 0,
         commits: 0,
     };
 
@@ -147,6 +149,7 @@ pub fn analyze_repo(
         let deleted = deleted.parse::<u64>().unwrap_or(0);
         analysis.added += added;
         analysis.deleted += deleted;
+        analysis.files += 1;
         if let Some((language, _)) = classify_path(path)
             && !is_ignored(language, ignored)
         {
@@ -217,6 +220,7 @@ pub fn merge(
     for result in results {
         stats.added += result.added;
         stats.deleted += result.deleted;
+        stats.files += result.files;
         stats.commits += result.commits;
         for (language, lines) in &result.lines_by_lang {
             *stats.lines_by_lang.entry(language.clone()).or_insert(0) += lines;
@@ -267,6 +271,7 @@ mod tests {
                 .collect(),
             added: 15,
             deleted: 2,
+            files: 2,
             commits: 3,
         };
         let second = RepoAnalysis {
@@ -274,6 +279,7 @@ mod tests {
             lines_by_lang: [("Rust".to_string(), 7)].into_iter().collect(),
             added: 7,
             deleted: 1,
+            files: 1,
             commits: 1,
         };
         let stats = merge(&[first, second], &[], 2);
@@ -282,6 +288,7 @@ mod tests {
         assert_eq!(stats.repos_by_lang["Rust"], vec!["u/a", "u/b"]);
         assert_eq!(stats.added, 22);
         assert_eq!(stats.deleted, 3);
+        assert_eq!(stats.files, 3);
         assert_eq!(stats.commits, 4);
         assert_eq!(stats.repos_analyzed, 2);
     }

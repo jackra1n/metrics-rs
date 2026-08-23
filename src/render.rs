@@ -324,12 +324,21 @@ pub fn render(p: &Profile) -> String {
 
     // faint analysis-meta line: what the numbers above were computed over,
     // centered directly above the language bar
-    let meta = format!(
-        "analyzed {} repos · {} · {} commits",
-        p.user.repos_total,
-        fmt_storage(p.storage_kb),
-        fmt(p.lines.commits),
-    );
+    let meta = if let Some(indepth) = &p.indepth {
+        format!(
+            "{} edited files · {} · {} commits",
+            fmt(indepth.files),
+            fmt_storage(p.storage_kb),
+            fmt(p.lines.commits),
+        )
+    } else {
+        format!(
+            "analyzed {} repos · {} · {} commits",
+            p.user.repos_total,
+            fmt_storage(p.storage_kb),
+            fmt(p.lines.commits),
+        )
+    };
     b.push(format!(
         r#"  <text x="{}" y="{}" text-anchor="middle" font-size="8" fill="{m}">{m2}</text>"#,
         coord(W as f64 / 2.0),
