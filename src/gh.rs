@@ -25,6 +25,63 @@ pub fn indepth_targets(user: &GhUser, activity: &crate::model::Activity) -> Vec<
     }
     targets
 }
+const BASE64_CHARS: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/// RFC 4648 standard base64 encoding without third-party crates.
+pub fn base64_encode(data: &[u8]) -> String {
+    let mut out = String::with_capacity(data.len() * 4 / 3 + 4);
+    let mut chunks = data.chunks_exact(3);
+    for chunk in &mut chunks {
+        let n = ((chunk[0] as u32) << 16) | ((chunk[1] as u32) << 8) | (chunk[2] as u32);
+        out.push(BASE64_CHARS[((n >> 18) & 0x3f) as usize] as char);
+        out.push(BASE64_CHARS[((n >> 12) & 0x3f) as usize] as char);
+        out.push(BASE64_CHARS[((n >> 6) & 0x3f) as usize] as char);
+        out.push(BASE64_CHARS[(n & 0x3f) as usize] as char);
+    }
+    let rem = chunks.remainder();
+    if rem.len() == 1 {
+        let n = (rem[0] as u32) << 16;
+        out.push(BASE64_CHARS[((n >> 18) & 0x3f) as usize] as char);
+        out.push(BASE64_CHARS[((n >> 12) & 0x3f) as usize] as char);
+        out.push('=');
+        out.push('=');
+    } else if rem.len() == 2 {
+        let n = ((rem[0] as u32) << 16) | ((rem[1] as u32) << 8);
+        out.push(BASE64_CHARS[((n >> 18) & 0x3f) as usize] as char);
+        out.push(BASE64_CHARS[((n >> 12) & 0x3f) as usize] as char);
+        out.push(BASE64_CHARS[((n >> 6) & 0x3f) as usize] as char);
+        out.push('=');
+    }
+    out
+}
+
+/// Download small avatar image (size 64px) and format as a base64 Data URI
+/// so SVG images render self-contained without external network fetch errors on GitHub.
+pub fn fetch_avatar_data_uri(agent: &ureq::Agent, url: &str) -> Option<String> {
+    let target = if url.contains('?') {
+        format!("{url}&s=64")
+    } else {
+        format!("{url}?s=64")
+    };
+    let mut res = agent.get(&target).call().ok()?;
+    if res.status().as_u16() != 200 {
+        return None;
+    }
+    let content_type = res
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("image/jpeg")
+        .to_string();
+    let mime = content_type.split(';').next().unwrap_or("image/jpeg").trim();
+    let mut bytes = Vec::new();
+    std::io::Read::read_to_end(&mut res.body_mut().as_reader(), &mut bytes).ok()?;
+    if bytes.is_empty() {
+        return None;
+    }
+    let encoded = base64_encode(&bytes);
+    Some(format!("data:{mime};base64,{encoded}"))
+}
 
 const GRAPHQL_URL: &str = "https://api.github.com/graphql";
 
@@ -252,6 +309,9 @@ pub fn fetch_profile(
                 .map(str::to_string);
         }
     }
+    if let Some(data_uri) = fetch_avatar_data_uri(agent, &user.avatar_url) {
+        user.avatar_url = data_uri;
+    }
     Ok(user)
 }
 
@@ -447,5 +507,16 @@ mod tests {
         assert_eq!(iso_date(1_759_622_400), "2025-10-05");
         assert_eq!(iso_date(0), "1970-01-01");
         assert_eq!(iso_date(1_759_622_400 + 86_400 * 365), "2026-10-05");
+    }
+
+    #[test]
+    fn base64_encode_known_vectors() {
+        assert_eq!(base64_encode(b""), "");
+        assert_eq!(base64_encode(b"f"), "Zg==");
+        assert_eq!(base64_encode(b"fo"), "Zm8=");
+        assert_eq!(base64_encode(b"foo"), "Zm9v");
+        assert_eq!(base64_encode(b"foob"), "Zm9vYg==");
+        assert_eq!(base64_encode(b"fooba"), "Zm9vYmE=");
+        assert_eq!(base64_encode(b"foobar"), "Zm9vYmFy");
     }
 }

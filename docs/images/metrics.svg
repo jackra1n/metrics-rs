@@ -2,24 +2,24 @@
 <rect width="480" height="338" rx="6" fill="#0d1117" stroke="#30363d"/>
 <g font-family="-apple-system,Segoe UI,Ubuntu,Sans-serif">
   <clipPath id="av"><circle cx="36" cy="36" r="10"/></clipPath>
-  <image href="https://avatars.githubusercontent.com/u/45038833?u=5beb8eaaeb3c03ec83617fca1a13ef7e7c8d2053&amp;v=4" x="26" y="26" width="20" height="20" clip-path="url(#av)"/>
+  <image href="data:image/jpeg;base64,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" x="26" y="26" width="20" height="20" clip-path="url(#av)"/>
   <text x="56" y="34" font-size="14" font-weight="bold" fill="#e6edf3">jackra1n</text>
   <text x="56" y="50" font-size="10" fill="#8b949e">joined 7y ago</text>
   <rect x="313" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="324" y="28" width="8" height="8" rx="2" fill="#161b22"/>
   <rect x="335" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
-  <rect x="346" y="28" width="8" height="8" rx="2" fill="#006d32"/>
+  <rect x="346" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="357" y="28" width="8" height="8" rx="2" fill="#26a641"/>
-  <rect x="368" y="28" width="8" height="8" rx="2" fill="#39d353"/>
+  <rect x="368" y="28" width="8" height="8" rx="2" fill="#26a641"/>
   <rect x="379" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="390" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="401" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="412" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="423" y="28" width="8" height="8" rx="2" fill="#26a641"/>
-  <rect x="434" y="28" width="8" height="8" rx="2" fill="#006d32"/>
-  <rect x="445" y="28" width="8" height="8" rx="2" fill="#161b22"/>
-  <rect x="456" y="28" width="8" height="8" rx="2" fill="#161b22"/>
-  <text x="464" y="50" text-anchor="end" font-size="8" fill="#8b949e">contributed to 45 repositories</text>
+  <rect x="434" y="28" width="8" height="8" rx="2" fill="#26a641"/>
+  <rect x="445" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="456" y="28" width="8" height="8" rx="2" fill="#39d353"/>
+  <text x="464" y="50" text-anchor="end" font-size="8" fill="#8b949e">contributed to 46 repositories</text>
   <line x1="16" y1="80" x2="464" y2="80" stroke="#21262d"/>
   <g transform="translate(17,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></g>
   <text x="31" y="96" font-size="9" fill="#8b949e">TOP LICENSE</text>
@@ -44,41 +44,41 @@
   <text x="257" y="158" font-size="15" font-weight="bold" fill="#e6edf3">333MB</text>
   <g transform="translate(377,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></g>
   <text x="391" y="140" font-size="9" fill="#8b949e">LINES CHANGED</text>
-  <text x="377" y="153" font-size="11" font-weight="bold" fill="#3fb950">+674.4k</text>
-  <text x="377" y="166" font-size="11" font-weight="bold" fill="#f85149">−120k</text>
+  <text x="377" y="153" font-size="11" font-weight="bold" fill="#3fb950">+679.2k</text>
+  <text x="377" y="166" font-size="11" font-weight="bold" fill="#f85149">−120.6k</text>
   <line x1="16" y1="184" x2="464" y2="184" stroke="#21262d"/>
   <text x="16" y="198" font-size="9" fill="#8b949e">LANGUAGES</text>
-  <text x="240" y="218" text-anchor="middle" font-size="8" fill="#8b949e">7.9k edited files · 4.3MB of code · 2.9k commits</text>
+  <text x="240" y="218" text-anchor="middle" font-size="8" fill="#8b949e">8k edited files · 4.4MB of code · 2.9k commits</text>
   <clipPath id="bar"><rect x="16" y="226" width="448" height="8" rx="4"/></clipPath>
-  <rect x="16" y="226" width="125" height="8" fill="#3178c6" clip-path="url(#bar)"/>
-  <rect x="141" y="226" width="115" height="8" fill="#3572A5" clip-path="url(#bar)"/>
-  <rect x="256" y="226" width="106" height="8" fill="#ff3e00" clip-path="url(#bar)"/>
-  <rect x="362" y="226" width="47" height="8" fill="#dea584" clip-path="url(#bar)"/>
+  <rect x="16" y="226" width="123" height="8" fill="#3178c6" clip-path="url(#bar)"/>
+  <rect x="139" y="226" width="113" height="8" fill="#3572A5" clip-path="url(#bar)"/>
+  <rect x="252" y="226" width="104" height="8" fill="#ff3e00" clip-path="url(#bar)"/>
+  <rect x="356" y="226" width="53" height="8" fill="#dea584" clip-path="url(#bar)"/>
   <rect x="409" y="226" width="16" height="8" fill="#A97BFF" clip-path="url(#bar)"/>
-  <rect x="425" y="226" width="14" height="8" fill="#7355dd" clip-path="url(#bar)"/>
-  <rect x="439" y="226" width="13" height="8" fill="#878787" clip-path="url(#bar)"/>
-  <rect x="452" y="226" width="12" height="8" fill="#663399" clip-path="url(#bar)"/>
+  <rect x="425" y="226" width="13" height="8" fill="#7355dd" clip-path="url(#bar)"/>
+  <rect x="438" y="226" width="13" height="8" fill="#878787" clip-path="url(#bar)"/>
+  <rect x="451" y="226" width="13" height="8" fill="#663399" clip-path="url(#bar)"/>
   <circle cx="20" cy="252" r="4" fill="#3178c6"/>
   <text x="30" y="256" font-size="10" fill="#e6edf3">TypeScript</text>
-  <text x="224" y="256" text-anchor="end" font-size="10" fill="#8b949e">27.9%</text>
+  <text x="224" y="256" text-anchor="end" font-size="10" fill="#8b949e">27.4%</text>
   <circle cx="244" cy="252" r="4" fill="#3572A5"/>
   <text x="254" y="256" font-size="10" fill="#e6edf3">Python</text>
-  <text x="448" y="256" text-anchor="end" font-size="10" fill="#8b949e">25.7%</text>
+  <text x="448" y="256" text-anchor="end" font-size="10" fill="#8b949e">25.3%</text>
   <circle cx="20" cy="269" r="4" fill="#ff3e00"/>
   <text x="30" y="273" font-size="10" fill="#e6edf3">Svelte</text>
-  <text x="224" y="273" text-anchor="end" font-size="10" fill="#8b949e">23.7%</text>
+  <text x="224" y="273" text-anchor="end" font-size="10" fill="#8b949e">23.3%</text>
   <circle cx="244" cy="269" r="4" fill="#dea584"/>
   <text x="254" y="273" font-size="10" fill="#e6edf3">Rust</text>
-  <text x="448" y="273" text-anchor="end" font-size="10" fill="#8b949e">10.4%</text>
+  <text x="448" y="273" text-anchor="end" font-size="10" fill="#8b949e">11.9%</text>
   <circle cx="20" cy="286" r="4" fill="#A97BFF"/>
   <text x="30" y="290" font-size="10" fill="#e6edf3">Kotlin</text>
-  <text x="224" y="290" text-anchor="end" font-size="10" fill="#8b949e">3.6%</text>
+  <text x="224" y="290" text-anchor="end" font-size="10" fill="#8b949e">3.5%</text>
   <circle cx="244" cy="286" r="4" fill="#7355dd"/>
   <text x="254" y="290" font-size="10" fill="#e6edf3">C#</text>
-  <text x="448" y="290" text-anchor="end" font-size="10" fill="#8b949e">3.1%</text>
+  <text x="448" y="290" text-anchor="end" font-size="10" fill="#8b949e">3.0%</text>
   <circle cx="20" cy="303" r="4" fill="#878787"/>
   <text x="30" y="307" font-size="10" fill="#e6edf3">Hack</text>
-  <text x="224" y="307" text-anchor="end" font-size="10" fill="#8b949e">3.0%</text>
+  <text x="224" y="307" text-anchor="end" font-size="10" fill="#8b949e">2.9%</text>
   <circle cx="244" cy="303" r="4" fill="#663399"/>
   <text x="254" y="307" font-size="10" fill="#e6edf3">CSS</text>
   <text x="448" y="307" text-anchor="end" font-size="10" fill="#8b949e">2.7%</text>
