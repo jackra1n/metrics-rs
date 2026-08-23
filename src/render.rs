@@ -160,7 +160,7 @@ fn icon(name: &str, x: f64, y: f64, color: &str) -> String {
     };
     match name {
         // document / license
-        "LICENSE" => p(
+        "TOP LICENSE" | "PREFERRED LICENSE" | "LICENSE" => p(
             r#"<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>"#,
         ),
         // star
@@ -184,11 +184,13 @@ fn icon(name: &str, x: f64, y: f64, color: &str) -> String {
             r#"<path d="M16.5 9.4 7.55 4.24M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8zM3.3 7l8.7 5 8.7-5M12 22V12"/>"#,
         ),
         // hard drive
-        "STORAGE" => p(
+        "REPO STORAGE" | "STORAGE" => p(
             r#"<line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/>"#,
         ),
         // activity / pulse
-        "LINES" => p(r#"<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>"#),
+        "LINES CHANGED" | "LINES" => {
+            p(r#"<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>"#)
+        }
         _ => String::new(),
     }
 }
@@ -269,16 +271,16 @@ pub fn render(p: &Profile) -> String {
     ));
     b.y += 16.0;
     // fact grid: 2 rows x 4 columns, icon left of label
-    let license_label = p.preferred_license.as_deref().unwrap_or("none");
+    let license_label = p.preferred_license.as_deref().unwrap_or("None");
     let facts: [(&str, String); 8] = [
-        ("LICENSE", esc(license_label)),
+        ("TOP LICENSE", esc(license_label)),
         ("STARGAZERS", fmt(p.stars)),
         ("WATCHERS", fmt(p.watchers)),
         ("FORKS", fmt(p.forks)),
         ("SPONSORS", fmt(p.user.sponsors)),
         ("RELEASES", fmt(p.releases)),
-        ("STORAGE", fmt_storage(p.storage_kb)),
-        ("LINES", String::new()),
+        ("REPO STORAGE", fmt_storage(p.storage_kb)),
+        ("LINES CHANGED", String::new()),
     ];
     const XS: [f64; 4] = [16.0, 136.0, 256.0, 376.0];
     for (i, (label, value)) in facts.into_iter().enumerate() {
@@ -288,7 +290,7 @@ pub fn render(p: &Profile) -> String {
         let ly = b.y + row as f64 * 44.0;
         b.push(icon(label, lx + 1.0, ly - 9.0, MUTED));
         b.push(text(lx + 15.0, ly, 9, MUTED, label));
-        if label == "LINES" {
+        if label == "LINES CHANGED" {
             b.push(format!(
                 r#"  <text x="{x}" y="{y}" font-size="11" font-weight="bold" fill="{color}">+{added}</text>"#,
                 x = coord(lx + 1.0),
@@ -516,14 +518,14 @@ mod tests {
         assert!(svg.contains("#0d1117"));
         assert!(svg.contains("Jack &amp; &lt;Friends&gt;"));
         for label in [
-            "LICENSE",
+            "TOP LICENSE",
             "STARGAZERS",
             "WATCHERS",
             "FORKS",
             "SPONSORS",
             "RELEASES",
-            "STORAGE",
-            "LINES",
+            "REPO STORAGE",
+            "LINES CHANGED",
         ] {
             assert!(svg.contains(label), "missing {label}");
         }

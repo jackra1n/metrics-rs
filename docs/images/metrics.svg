@@ -5,24 +5,24 @@
   <image href="https://avatars.githubusercontent.com/u/45038833?u=5beb8eaaeb3c03ec83617fca1a13ef7e7c8d2053&amp;v=4" x="26" y="26" width="20" height="20" clip-path="url(#av)"/>
   <text x="56" y="34" font-size="14" font-weight="bold" fill="#e6edf3">jackra1n</text>
   <text x="56" y="50" font-size="10" fill="#8b949e">joined 7y ago</text>
-  <rect x="313" y="28" width="8" height="8" rx="2" fill="#161b22"/>
-  <rect x="324" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
-  <rect x="335" y="28" width="8" height="8" rx="2" fill="#161b22"/>
-  <rect x="346" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
-  <rect x="357" y="28" width="8" height="8" rx="2" fill="#006d32"/>
-  <rect x="368" y="28" width="8" height="8" rx="2" fill="#26a641"/>
-  <rect x="379" y="28" width="8" height="8" rx="2" fill="#39d353"/>
+  <rect x="313" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="324" y="28" width="8" height="8" rx="2" fill="#161b22"/>
+  <rect x="335" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
+  <rect x="346" y="28" width="8" height="8" rx="2" fill="#006d32"/>
+  <rect x="357" y="28" width="8" height="8" rx="2" fill="#26a641"/>
+  <rect x="368" y="28" width="8" height="8" rx="2" fill="#39d353"/>
+  <rect x="379" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="390" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="401" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="412" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
-  <rect x="423" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
-  <rect x="434" y="28" width="8" height="8" rx="2" fill="#26a641"/>
-  <rect x="445" y="28" width="8" height="8" rx="2" fill="#006d32"/>
+  <rect x="423" y="28" width="8" height="8" rx="2" fill="#26a641"/>
+  <rect x="434" y="28" width="8" height="8" rx="2" fill="#006d32"/>
+  <rect x="445" y="28" width="8" height="8" rx="2" fill="#161b22"/>
   <rect x="456" y="28" width="8" height="8" rx="2" fill="#161b22"/>
   <text x="464" y="50" text-anchor="end" font-size="8" fill="#8b949e">contributed to 45 repositories</text>
   <line x1="16" y1="80" x2="464" y2="80" stroke="#21262d"/>
   <g transform="translate(17,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></g>
-  <text x="31" y="96" font-size="9" fill="#8b949e">LICENSE</text>
+  <text x="31" y="96" font-size="9" fill="#8b949e">TOP LICENSE</text>
   <text x="17" y="114" font-size="15" font-weight="bold" fill="#e6edf3">AGPL-3.0</text>
   <g transform="translate(137,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></g>
   <text x="151" y="96" font-size="9" fill="#8b949e">STARGAZERS</text>
@@ -40,15 +40,15 @@
   <text x="151" y="140" font-size="9" fill="#8b949e">RELEASES</text>
   <text x="137" y="158" font-size="15" font-weight="bold" fill="#e6edf3">17</text>
   <g transform="translate(257,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/></g>
-  <text x="271" y="140" font-size="9" fill="#8b949e">STORAGE</text>
-  <text x="257" y="158" font-size="15" font-weight="bold" fill="#e6edf3">387.4MB</text>
+  <text x="271" y="140" font-size="9" fill="#8b949e">REPO STORAGE</text>
+  <text x="257" y="158" font-size="15" font-weight="bold" fill="#e6edf3">333MB</text>
   <g transform="translate(377,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></g>
-  <text x="391" y="140" font-size="9" fill="#8b949e">LINES</text>
+  <text x="391" y="140" font-size="9" fill="#8b949e">LINES CHANGED</text>
   <text x="377" y="153" font-size="11" font-weight="bold" fill="#3fb950">+674.4k</text>
   <text x="377" y="166" font-size="11" font-weight="bold" fill="#f85149">−120k</text>
   <line x1="16" y1="184" x2="464" y2="184" stroke="#21262d"/>
   <text x="16" y="198" font-size="9" fill="#8b949e">LANGUAGES</text>
-  <text x="240" y="218" text-anchor="middle" font-size="8" fill="#8b949e">analyzed 58 repos · 387.4MB · 2.9k commits</text>
+  <text x="240" y="218" text-anchor="middle" font-size="8" fill="#8b949e">analyzed 58 repos · 333MB · 2.9k commits</text>
   <clipPath id="bar"><rect x="16" y="226" width="448" height="8" rx="4"/></clipPath>
   <rect x="16" y="226" width="125" height="8" fill="#3178c6" clip-path="url(#bar)"/>
   <rect x="141" y="226" width="115" height="8" fill="#3572A5" clip-path="url(#bar)"/>
