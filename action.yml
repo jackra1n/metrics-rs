@@ -48,4 +48,31 @@ runs:
         if [[ -n "$INPUT_IGNORE_LANGUAGES" ]]; then
           ARGS+=("--ignore-languages" "$INPUT_IGNORE_LANGUAGES")
         fi
-        cargo run --manifest-path "$ACTION_PATH/Cargo.toml" --release -- "${ARGS[@]}"
+
+        # Detect runner OS and Architecture
+        OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        ARCH="$(uname -m)"
+        case "$ARCH" in
+          x86_64|amd64) TARGET_ARCH="x86_64" ;;
+          aarch64|arm64) TARGET_ARCH="aarch64" ;;
+          *) TARGET_ARCH="$ARCH" ;;
+        esac
+
+        case "$OS" in
+          linux) TARGET_OS="unknown-linux-gnu" ;;
+          darwin) TARGET_OS="apple-darwin" ;;
+          *) TARGET_OS="$OS" ;;
+        esac
+
+        TARGET="${TARGET_ARCH}-${TARGET_OS}"
+        BIN_DIR="/tmp/metrics-rs-bin"
+        mkdir -p "$BIN_DIR"
+
+        # Fast path: Try downloading prebuilt binary from GitHub Releases (~100ms)
+        DOWNLOAD_URL="https://github.com/jackra1n/metrics-rs/releases/latest/download/metrics-rs-${TARGET}.tar.gz"
+        if curl -sLf "$DOWNLOAD_URL" | tar -xz -C "$BIN_DIR" 2>/dev/null && [ -x "$BIN_DIR/metrics-rs" ]; then
+          "$BIN_DIR/metrics-rs" "${ARGS[@]}"
+        else
+          # Fallback: compile on the runner via cargo
+          cargo run --manifest-path "$ACTION_PATH/Cargo.toml" --release -- "${ARGS[@]}"
+        fi
