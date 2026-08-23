@@ -179,7 +179,7 @@ impl Builder {
 fn icon(name: &str, x: f64, y: f64, color: &str) -> String {
     let p = |d: &str| {
         format!(
-            r#"  <g transform="translate({x},{y}) scale(0.5)" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{d}</g>"#,
+            r#"  <g transform="translate({x},{y}) scale(0.625)" fill="none" stroke="{color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">{d}</g>"#,
             x = coord(x),
             y = coord(y),
             color = color,
@@ -238,17 +238,17 @@ pub fn render(p: &Profile) -> String {
     };
 
     // header: small avatar + identity (20px avatar in a 48px band)
-    b.push(r#"  <clipPath id="av"><circle cx="36" cy="36" r="10"/></clipPath>"#.to_string());
+    b.push(r#"  <clipPath id="av"><circle cx="36" cy="36" r="12"/></clipPath>"#.to_string());
     b.push(format!(
-        r#"  <image href="{}" x="26" y="26" width="20" height="20" clip-path="url(#av)"/>"#,
+        r#"  <image href="{}" x="24" y="24" width="24" height="24" clip-path="url(#av)"/>"#,
         esc(&p.user.avatar_url)
     ));
     let display_name = p.user.name.as_deref().unwrap_or(&p.user.login);
-    b.push(bold(56.0, 34.0, 14, TEXT, &esc(display_name)));
+    b.push(bold(58.0, 34.0, 17, TEXT, &esc(display_name)));
     b.push(text(
-        56.0,
-        50.0,
-        10,
+        58.0,
+        52.0,
+        13,
         MUTED,
         &format!("joined {}", joined_age(&p.user.created_at, now)),
     ));
@@ -282,13 +282,13 @@ pub fn render(p: &Profile) -> String {
             ));
         }
         b.push(format!(
-            r#"  <text x="{}" y="50" text-anchor="end" font-size="8" fill="{f}">contributed to {} repositories</text>"#,
+            r#"  <text x="{}" y="52" text-anchor="end" font-size="12" fill="{f}">contributed to {} repositories</text>"#,
             coord(X1),
             p.user.repos_contributed,
             f = MUTED,
         ));
     }
-    b.y += 64.0;
+    b.y += 68.0;
 
     // divider
     b.push(format!(
@@ -305,37 +305,37 @@ pub fn render(p: &Profile) -> String {
         ("FORKS", fmt(p.forks)),
         ("SPONSORS", fmt(p.user.sponsors)),
         ("RELEASES", fmt(p.releases)),
-        ("REPO STORAGE", fmt_storage(p.storage_kb)),
-        ("LINES CHANGED", String::new()),
+        ("STORAGE", fmt_storage(p.storage_kb)),
+        ("LINES", String::new()),
     ];
     const XS: [f64; 4] = [16.0, 136.0, 256.0, 376.0];
     for (i, (label, value)) in facts.into_iter().enumerate() {
         let col = i % 4;
         let row = i / 4;
         let lx = XS[col];
-        let ly = b.y + row as f64 * 44.0;
-        b.push(icon(label, lx + 1.0, ly - 9.0, MUTED));
-        b.push(text(lx + 15.0, ly, 9, MUTED, label));
-        if label == "LINES CHANGED" {
+        let ly = b.y + row as f64 * 54.0;
+        b.push(icon(label, lx + 1.0, ly - 11.0, MUTED));
+        b.push(text(lx + 19.0, ly, 12, MUTED, label));
+        if label == "LINES" {
             b.push(format!(
-                r#"  <text x="{x}" y="{y}" font-size="11" font-weight="bold" fill="{color}">+{added}</text>"#,
+                r#"  <text x="{x}" y="{y}" font-size="13" font-weight="bold" fill="{color}">+{added}</text>"#,
                 x = coord(lx + 1.0),
-                y = coord(ly + 13.0),
+                y = coord(ly + 15.0),
                 color = "#3fb950",
                 added = fmt(p.lines.added),
             ));
             b.push(format!(
-                r#"  <text x="{x}" y="{y}" font-size="11" font-weight="bold" fill="{color}">−{deleted}</text>"#,
+                r#"  <text x="{x}" y="{y}" font-size="13" font-weight="bold" fill="{color}">−{deleted}</text>"#,
                 x = coord(lx + 1.0),
-                y = coord(ly + 26.0),
+                y = coord(ly + 30.0),
                 color = "#f85149",
                 deleted = fmt(p.lines.deleted),
             ));
         } else {
-            b.push(bold(lx + 1.0, ly + 18.0, 15, TEXT, &value));
+            b.push(bold(lx + 1.0, ly + 22.0, 19, TEXT, &value));
         }
     }
-    b.y += 88.0;
+    b.y += 108.0;
 
     // divider between facts and languages
     b.push(format!(
@@ -345,9 +345,8 @@ pub fn render(p: &Profile) -> String {
     b.y += 14.0;
 
     // languages section
-    b.push(text(X0, b.y, 9, MUTED, "LANGUAGES"));
-    b.y += 13.0;
-
+    b.push(bold(X0, b.y, 13, MUTED, "LANGUAGES"));
+    b.y += 16.0;
     // faint analysis-meta line: what the numbers above were computed over,
     // centered directly above the language bar
     let total_code_bytes: u64 = p
@@ -373,13 +372,13 @@ pub fn render(p: &Profile) -> String {
         )
     };
     b.push(format!(
-        r#"  <text x="{}" y="{}" text-anchor="middle" font-size="8" fill="{m}">{m2}</text>"#,
+        r#"  <text x="{}" y="{}" text-anchor="middle" font-size="12" fill="{m}">{m2}</text>"#,
         coord(W as f64 / 2.0),
-        coord(b.y + 7.0),
+        coord(b.y + 8.0),
         m = MUTED,
         m2 = esc(&meta),
     ));
-    b.y += 15.0;
+    b.y += 18.0;
 
     if p.languages.is_empty() {
         b.push(text(
@@ -400,7 +399,7 @@ pub fn render(p: &Profile) -> String {
             .sum::<f64>()
             .max(f64::MIN_POSITIVE);
         let bar_y = b.y;
-        let bar_h = 8.0;
+        let bar_h = 10.0;
         b.push(format!(
             r#"  <clipPath id="bar"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{r}"/></clipPath>"#,
             x = coord(X0),
@@ -426,23 +425,23 @@ pub fn render(p: &Profile) -> String {
             ));
             bx += seg_w;
         }
-        b.y += bar_h + 14.0;
+        b.y += bar_h + 18.0;
 
         // legend grid: 2 cols x up to 5 rows
         for (i, lang) in p.languages.iter().enumerate() {
             let col = i % 2;
             let row = i / 2;
             let lx = X0 + col as f64 * 224.0;
-            let ly = b.y + 8.0 + row as f64 * 17.0;
+            let ly = b.y + 8.0 + row as f64 * 22.0;
             b.push(format!(
-                r#"  <circle cx="{cx}" cy="{cy}" r="4" fill="{fill}"/>"#,
-                cx = coord(lx + 4.0),
-                cy = coord(ly - 4.0),
+                r#"  <circle cx="{cx}" cy="{cy}" r="5" fill="{fill}"/>"#,
+                cx = coord(lx + 5.0),
+                cy = coord(ly - 4.5),
                 fill = lang.color,
             ));
-            b.push(text(lx + 14.0, ly, 10, TEXT, &esc(&lang.name)));
+            b.push(text(lx + 18.0, ly, 13, TEXT, &esc(&lang.name)));
             b.push(format!(
-                r#"  <text x="{x}" y="{y}" text-anchor="end" font-size="10" fill="{fill}">{pct:.1}%</text>"#,
+                r#"  <text x="{x}" y="{y}" text-anchor="end" font-size="13" fill="{fill}">{pct:.1}%</text>"#,
                 x = coord(lx + 208.0),
                 y = coord(ly),
                 fill = MUTED,
@@ -450,7 +449,7 @@ pub fn render(p: &Profile) -> String {
             ));
         }
         let rows = p.languages.len().div_ceil(2);
-        b.y += rows as f64 * 17.0 + 6.0;
+        b.y += rows as f64 * 22.0 + 10.0;
     }
 
     let h = b.y + 16.0;
@@ -566,8 +565,8 @@ mod tests {
             "FORKS",
             "SPONSORS",
             "RELEASES",
-            "REPO STORAGE",
-            "LINES CHANGED",
+            "STORAGE",
+            "LINES",
         ] {
             assert!(svg.contains(label), "missing {label}");
         }

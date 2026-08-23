@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="480" height="338" viewBox="0 0 480 338">
-<rect width="480" height="338" rx="6" fill="#0d1117" stroke="#30363d"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="398" viewBox="0 0 480 398">
+<rect width="480" height="398" rx="6" fill="#0d1117" stroke="#30363d"/>
 <g font-family="-apple-system,Segoe UI,Ubuntu,Sans-serif">
-  <clipPath id="av"><circle cx="36" cy="36" r="10"/></clipPath>
-  <image href="data:image/jpeg;base64,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" x="26" y="26" width="20" height="20" clip-path="url(#av)"/>
-  <text x="56" y="34" font-size="14" font-weight="bold" fill="#e6edf3">jackra1n</text>
-  <text x="56" y="50" font-size="10" fill="#8b949e">joined 7y ago</text>
+  <clipPath id="av"><circle cx="36" cy="36" r="12"/></clipPath>
+  <image href="data:image/jpeg;base64,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" x="24" y="24" width="24" height="24" clip-path="url(#av)"/>
+  <text x="58" y="34" font-size="17" font-weight="bold" fill="#e6edf3">jackra1n</text>
+  <text x="58" y="52" font-size="13" fill="#8b949e">joined 7y ago</text>
   <rect x="313" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="324" y="28" width="8" height="8" rx="2" fill="#161b22"/>
   <rect x="335" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
@@ -16,71 +16,71 @@
   <rect x="401" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="412" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="423" y="28" width="8" height="8" rx="2" fill="#006d32"/>
-  <rect x="434" y="28" width="8" height="8" rx="2" fill="#26a641"/>
+  <rect x="434" y="28" width="8" height="8" rx="2" fill="#006d32"/>
   <rect x="445" y="28" width="8" height="8" rx="2" fill="#0e4429"/>
   <rect x="456" y="28" width="8" height="8" rx="2" fill="#39d353"/>
-  <text x="464" y="50" text-anchor="end" font-size="8" fill="#8b949e">contributed to 46 repositories</text>
-  <line x1="16" y1="80" x2="464" y2="80" stroke="#21262d"/>
-  <g transform="translate(17,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></g>
-  <text x="31" y="96" font-size="9" fill="#8b949e">TOP LICENSE</text>
-  <text x="17" y="114" font-size="15" font-weight="bold" fill="#e6edf3">AGPL-3.0</text>
-  <g transform="translate(137,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></g>
-  <text x="151" y="96" font-size="9" fill="#8b949e">STARGAZERS</text>
-  <text x="137" y="114" font-size="15" font-weight="bold" fill="#e6edf3">67</text>
-  <g transform="translate(257,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></g>
-  <text x="271" y="96" font-size="9" fill="#8b949e">WATCHERS</text>
-  <text x="257" y="114" font-size="15" font-weight="bold" fill="#e6edf3">37</text>
-  <g transform="translate(377,87) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9M12 13v2"/></g>
-  <text x="391" y="96" font-size="9" fill="#8b949e">FORKS</text>
-  <text x="377" y="114" font-size="15" font-weight="bold" fill="#e6edf3">10</text>
-  <g transform="translate(17,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></g>
-  <text x="31" y="140" font-size="9" fill="#8b949e">SPONSORS</text>
-  <text x="17" y="158" font-size="15" font-weight="bold" fill="#e6edf3">0</text>
-  <g transform="translate(137,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8zM3.3 7l8.7 5 8.7-5M12 22V12"/></g>
-  <text x="151" y="140" font-size="9" fill="#8b949e">RELEASES</text>
-  <text x="137" y="158" font-size="15" font-weight="bold" fill="#e6edf3">18</text>
-  <g transform="translate(257,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/></g>
-  <text x="271" y="140" font-size="9" fill="#8b949e">REPO STORAGE</text>
-  <text x="257" y="158" font-size="15" font-weight="bold" fill="#e6edf3">333MB</text>
-  <g transform="translate(377,131) scale(0.5)" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></g>
-  <text x="391" y="140" font-size="9" fill="#8b949e">LINES CHANGED</text>
-  <text x="377" y="153" font-size="11" font-weight="bold" fill="#3fb950">+679.4k</text>
-  <text x="377" y="166" font-size="11" font-weight="bold" fill="#f85149">−120.7k</text>
-  <line x1="16" y1="184" x2="464" y2="184" stroke="#21262d"/>
-  <text x="16" y="198" font-size="9" fill="#8b949e">LANGUAGES</text>
-  <text x="240" y="218" text-anchor="middle" font-size="8" fill="#8b949e">8k edited files · 4.4MB of code · 2.9k commits</text>
-  <clipPath id="bar"><rect x="16" y="226" width="448" height="8" rx="4"/></clipPath>
-  <rect x="16" y="226" width="123" height="8" fill="#3178c6" clip-path="url(#bar)"/>
-  <rect x="139" y="226" width="113" height="8" fill="#3572A5" clip-path="url(#bar)"/>
-  <rect x="252" y="226" width="104" height="8" fill="#ff3e00" clip-path="url(#bar)"/>
-  <rect x="356" y="226" width="53" height="8" fill="#dea584" clip-path="url(#bar)"/>
-  <rect x="409" y="226" width="16" height="8" fill="#A97BFF" clip-path="url(#bar)"/>
-  <rect x="425" y="226" width="13" height="8" fill="#7355dd" clip-path="url(#bar)"/>
-  <rect x="438" y="226" width="13" height="8" fill="#878787" clip-path="url(#bar)"/>
-  <rect x="451" y="226" width="13" height="8" fill="#663399" clip-path="url(#bar)"/>
-  <circle cx="20" cy="252" r="4" fill="#3178c6"/>
-  <text x="30" y="256" font-size="10" fill="#e6edf3">TypeScript</text>
-  <text x="224" y="256" text-anchor="end" font-size="10" fill="#8b949e">27.4%</text>
-  <circle cx="244" cy="252" r="4" fill="#3572A5"/>
-  <text x="254" y="256" font-size="10" fill="#e6edf3">Python</text>
-  <text x="448" y="256" text-anchor="end" font-size="10" fill="#8b949e">25.3%</text>
-  <circle cx="20" cy="269" r="4" fill="#ff3e00"/>
-  <text x="30" y="273" font-size="10" fill="#e6edf3">Svelte</text>
-  <text x="224" y="273" text-anchor="end" font-size="10" fill="#8b949e">23.3%</text>
-  <circle cx="244" cy="269" r="4" fill="#dea584"/>
-  <text x="254" y="273" font-size="10" fill="#e6edf3">Rust</text>
-  <text x="448" y="273" text-anchor="end" font-size="10" fill="#8b949e">11.9%</text>
-  <circle cx="20" cy="286" r="4" fill="#A97BFF"/>
-  <text x="30" y="290" font-size="10" fill="#e6edf3">Kotlin</text>
-  <text x="224" y="290" text-anchor="end" font-size="10" fill="#8b949e">3.5%</text>
-  <circle cx="244" cy="286" r="4" fill="#7355dd"/>
-  <text x="254" y="290" font-size="10" fill="#e6edf3">C#</text>
-  <text x="448" y="290" text-anchor="end" font-size="10" fill="#8b949e">3.0%</text>
-  <circle cx="20" cy="303" r="4" fill="#878787"/>
-  <text x="30" y="307" font-size="10" fill="#e6edf3">Hack</text>
-  <text x="224" y="307" text-anchor="end" font-size="10" fill="#8b949e">2.9%</text>
-  <circle cx="244" cy="303" r="4" fill="#663399"/>
-  <text x="254" y="307" font-size="10" fill="#e6edf3">CSS</text>
-  <text x="448" y="307" text-anchor="end" font-size="10" fill="#8b949e">2.7%</text>
+  <text x="464" y="52" text-anchor="end" font-size="12" fill="#8b949e">contributed to 46 repositories</text>
+  <line x1="16" y1="84" x2="464" y2="84" stroke="#21262d"/>
+  <g transform="translate(17,89) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></g>
+  <text x="35" y="100" font-size="12" fill="#8b949e">TOP LICENSE</text>
+  <text x="17" y="122" font-size="19" font-weight="bold" fill="#e6edf3">AGPL-3.0</text>
+  <g transform="translate(137,89) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></g>
+  <text x="155" y="100" font-size="12" fill="#8b949e">STARGAZERS</text>
+  <text x="137" y="122" font-size="19" font-weight="bold" fill="#e6edf3">67</text>
+  <g transform="translate(257,89) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></g>
+  <text x="275" y="100" font-size="12" fill="#8b949e">WATCHERS</text>
+  <text x="257" y="122" font-size="19" font-weight="bold" fill="#e6edf3">37</text>
+  <g transform="translate(377,89) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9M12 13v2"/></g>
+  <text x="395" y="100" font-size="12" fill="#8b949e">FORKS</text>
+  <text x="377" y="122" font-size="19" font-weight="bold" fill="#e6edf3">10</text>
+  <g transform="translate(17,143) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></g>
+  <text x="35" y="154" font-size="12" fill="#8b949e">SPONSORS</text>
+  <text x="17" y="176" font-size="19" font-weight="bold" fill="#e6edf3">0</text>
+  <g transform="translate(137,143) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8zM3.3 7l8.7 5 8.7-5M12 22V12"/></g>
+  <text x="155" y="154" font-size="12" fill="#8b949e">RELEASES</text>
+  <text x="137" y="176" font-size="19" font-weight="bold" fill="#e6edf3">18</text>
+  <g transform="translate(257,143) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" y1="16" x2="6.01" y2="16"/><line x1="10" y1="16" x2="10.01" y2="16"/></g>
+  <text x="275" y="154" font-size="12" fill="#8b949e">STORAGE</text>
+  <text x="257" y="176" font-size="19" font-weight="bold" fill="#e6edf3">333.1MB</text>
+  <g transform="translate(377,143) scale(0.625)" fill="none" stroke="#8b949e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></g>
+  <text x="395" y="154" font-size="12" fill="#8b949e">LINES</text>
+  <text x="377" y="169" font-size="13" font-weight="bold" fill="#3fb950">+679.4k</text>
+  <text x="377" y="184" font-size="13" font-weight="bold" fill="#f85149">−120.7k</text>
+  <line x1="16" y1="208" x2="464" y2="208" stroke="#21262d"/>
+  <text x="16" y="222" font-size="13" font-weight="bold" fill="#8b949e">LANGUAGES</text>
+  <text x="240" y="246" text-anchor="middle" font-size="12" fill="#8b949e">8k edited files · 4.4MB of code · 2.9k commits</text>
+  <clipPath id="bar"><rect x="16" y="256" width="448" height="10" rx="5"/></clipPath>
+  <rect x="16" y="256" width="123" height="10" fill="#3178c6" clip-path="url(#bar)"/>
+  <rect x="139" y="256" width="113" height="10" fill="#3572A5" clip-path="url(#bar)"/>
+  <rect x="252" y="256" width="104" height="10" fill="#ff3e00" clip-path="url(#bar)"/>
+  <rect x="356" y="256" width="54" height="10" fill="#dea584" clip-path="url(#bar)"/>
+  <rect x="410" y="256" width="16" height="10" fill="#A97BFF" clip-path="url(#bar)"/>
+  <rect x="426" y="256" width="13" height="10" fill="#7355dd" clip-path="url(#bar)"/>
+  <rect x="439" y="256" width="13" height="10" fill="#878787" clip-path="url(#bar)"/>
+  <rect x="452" y="256" width="12" height="10" fill="#663399" clip-path="url(#bar)"/>
+  <circle cx="21" cy="287.50" r="5" fill="#3178c6"/>
+  <text x="34" y="292" font-size="13" fill="#e6edf3">TypeScript</text>
+  <text x="224" y="292" text-anchor="end" font-size="13" fill="#8b949e">27.4%</text>
+  <circle cx="245" cy="287.50" r="5" fill="#3572A5"/>
+  <text x="258" y="292" font-size="13" fill="#e6edf3">Python</text>
+  <text x="448" y="292" text-anchor="end" font-size="13" fill="#8b949e">25.3%</text>
+  <circle cx="21" cy="309.50" r="5" fill="#ff3e00"/>
+  <text x="34" y="314" font-size="13" fill="#e6edf3">Svelte</text>
+  <text x="224" y="314" text-anchor="end" font-size="13" fill="#8b949e">23.3%</text>
+  <circle cx="245" cy="309.50" r="5" fill="#dea584"/>
+  <text x="258" y="314" font-size="13" fill="#e6edf3">Rust</text>
+  <text x="448" y="314" text-anchor="end" font-size="13" fill="#8b949e">11.9%</text>
+  <circle cx="21" cy="331.50" r="5" fill="#A97BFF"/>
+  <text x="34" y="336" font-size="13" fill="#e6edf3">Kotlin</text>
+  <text x="224" y="336" text-anchor="end" font-size="13" fill="#8b949e">3.5%</text>
+  <circle cx="245" cy="331.50" r="5" fill="#7355dd"/>
+  <text x="258" y="336" font-size="13" fill="#e6edf3">C#</text>
+  <text x="448" y="336" text-anchor="end" font-size="13" fill="#8b949e">3.0%</text>
+  <circle cx="21" cy="353.50" r="5" fill="#878787"/>
+  <text x="34" y="358" font-size="13" fill="#e6edf3">Hack</text>
+  <text x="224" y="358" text-anchor="end" font-size="13" fill="#8b949e">2.9%</text>
+  <circle cx="245" cy="353.50" r="5" fill="#663399"/>
+  <text x="258" y="358" font-size="13" fill="#e6edf3">CSS</text>
+  <text x="448" y="358" text-anchor="end" font-size="13" fill="#8b949e">2.7%</text>
 </g>
 </svg>
