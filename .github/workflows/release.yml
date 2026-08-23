@@ -61,17 +61,14 @@ jobs:
         run: |
           gh release upload ${{ needs.release-please.outputs.tag_name }} metrics-rs-${{ matrix.target }}.tar.gz --clobber
 
-  update-major-tag:
+  publish-release:
+    name: Publish Release
     needs: [release-please, build-and-upload-binaries]
-    if: ${{ needs.release-please.outputs.release_created && needs.release-please.outputs.major }}
+    if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-      - name: Update floating major version tag
+      - name: Publish draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch --tags
-          git tag -f "${{ needs.release-please.outputs.major }}" "${{ needs.release-please.outputs.tag_name }}"
-          git push -f origin "${{ needs.release-please.outputs.major }}"
+          gh release edit ${{ needs.release-please.outputs.tag_name }} --draft=false
