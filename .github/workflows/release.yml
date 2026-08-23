@@ -74,5 +74,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -f "v${{ needs.release-please.outputs.major }}" "${{ needs.release-please.outputs.tag_name }}"
-          git push -f origin "v${{ needs.release-please.outputs.major }}"
+          git tag -f "${{ needs.release-please.outputs.major }}" "${{ needs.release-please.outputs.tag_name }}"
+          git push -f origin "${{ needs.release-please.outputs.major }}"
