@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.1](https://github.com/jackra1n/metrics-rs/compare/0.4.0...0.4.1) (2026-08-23)
+
+
+### Bug Fixes
+
+* **ci:** provide repository context when publishing ([f8e64fb](https://github.com/jackra1n/metrics-rs/commit/f8e64fb26958d2162e6cbcd55747334d54359552))
+
+
+### CI/CD
+
+* enable draft releases and publish after binary upload for release immutability ([4b96e57](https://github.com/jackra1n/metrics-rs/commit/4b96e579fad3fe58cc2999f7cff5e12271984221))
+
 ## [0.4.0](https://github.com/jackra1n/metrics-rs/compare/0.3.0...0.4.0) (2026-08-23)
 
 
