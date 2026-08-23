@@ -78,7 +78,11 @@ pub fn fetch_avatar_data_uri(agent: &ureq::Agent, url: &str) -> Option<String> {
         .unwrap_or("image/jpeg")
         .trim();
     let mut bytes = Vec::new();
-    std::io::Read::read_to_end(&mut res.body_mut().as_reader(), &mut bytes).ok()?;
+    std::io::Read::read_to_end(
+        &mut std::io::Read::take(res.body_mut().as_reader(), 1024 * 1024),
+        &mut bytes,
+    )
+    .ok()?;
     if bytes.is_empty() {
         return None;
     }

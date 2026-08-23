@@ -50,6 +50,9 @@ fn clone_bare(url: &str, destination: &Path, single_branch: bool) -> Result<bool
     let status = command
         .arg(url)
         .arg(destination)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .status()
         .map_err(|e| format!("failed to start git clone: {e}"))?;
     Ok(status.success())
