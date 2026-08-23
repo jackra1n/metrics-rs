@@ -18,8 +18,6 @@ Designed as an efficient native alternative to heavy JavaScript/Chromium-based p
 - **🟩 14-Day Contribution Heatmap**: Mini GitHub-style activity grid in the header, paired with lifetime contributed repository counts.
 - **🈷️ GitHub Linguist Palette**: Bundled language colors and file classification matching GitHub Linguist, normalized across the top 8 languages.
 - **📈 Balanced Stat Grid**: Key stats (license, stars, watchers, forks, sponsors, releases, storage, and colored `+`/`−` lines) formatted for dark backgrounds.
-- **🖥️ Rich Terminal Summary**: Comprehensive stdout reporting detailing repository impact on the language bar, recent activity, and license distribution.
-
 ---
 
 ## 🚀 Installation
