@@ -112,14 +112,3 @@ jobs:
 | `indepth` | Run in-depth authored commit analysis (`yes` / `no`) | `no` |
 | `ignore_languages` | Comma-separated languages to exclude | `""` |
 
-## 🧪 Running Tests
-
-```bash
-cargo test
-```
-
----
-
-## 📄 License
-
-This project is licensed under the **GNU Affero General Public License v3.0** (AGPL-3.0-only). See the [LICENSE](./LICENSE) file for details.
