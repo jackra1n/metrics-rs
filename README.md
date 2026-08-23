@@ -4,7 +4,7 @@ A fast, lightweight, dependency-minimal GitHub profile metrics card generator wr
 
 Designed as an efficient native alternative to heavy JavaScript/Chromium-based profile metric tools.
 
-![GitHub metrics preview](./metrics.svg)
+![GitHub metrics preview](./docs/images/metrics.svg)
 
 ---
 
