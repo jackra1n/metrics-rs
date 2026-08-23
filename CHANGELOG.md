@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/jackra1n/metrics-rs/compare/0.3.0...0.4.0) (2026-08-23)
+
+
+### Features
+
+* **render:** improve typography scale, icon sizing, and layout readability ([c209d20](https://github.com/jackra1n/metrics-rs/commit/c209d20152f6724c27d8320be244b79fb16d8384))
+
+
+### CI/CD
+
+* fetch tags before updating floating major version tag in release workflow ([7c3c27e](https://github.com/jackra1n/metrics-rs/commit/7c3c27e5deba1535da713a976873a795297f92b4))
+
 ## [0.3.0](https://github.com/jackra1n/metrics-rs/compare/0.2.0...0.3.0) (2026-08-23)
 
 
