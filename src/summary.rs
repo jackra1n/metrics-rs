@@ -1,6 +1,12 @@
 use crate::model::Profile;
 use std::collections::BTreeMap;
 
+type RepoByteContrib<'a> = (&'a str, u64);
+type LangEntry<'a> = (u64, Vec<RepoByteContrib<'a>>);
+type RepoEntry<'a> = (u64, Vec<RepoByteContrib<'a>>);
+type RankedLang<'a> = (String, u64, Vec<RepoByteContrib<'a>>);
+type RankedRepo<'a> = (&'a str, u64, Vec<RepoByteContrib<'a>>);
+
 /// Human-readable byte size from raw bytes (B, KB, MB, GB).
 pub fn fmt_bytes(bytes: u64) -> String {
     if bytes >= 1_000_000_000 {
@@ -33,7 +39,12 @@ fn print_indepth_summary(stats: &crate::model::IndepthStats) {
     println!("\n[Languages Breakdown (In-Depth Author Commits)]");
     println!(
         "  Authored lines: +{} / −{} in {} edited files across {} of {} repositories ({} commits)",
-        stats.added, stats.deleted, stats.files, stats.repos_analyzed, stats.repos_total, stats.commits,
+        stats.added,
+        stats.deleted,
+        stats.files,
+        stats.repos_analyzed,
+        stats.repos_total,
+        stats.commits,
     );
     if !stats.ignored.is_empty() {
         println!("  Ignored languages: {}", stats.ignored.join(", "));
@@ -166,9 +177,8 @@ pub fn print_summary(p: &Profile) {
     println!("\n[Languages Breakdown & Repo Impact]");
     let mut total_code_bytes = 0u64;
     // Map: language -> (total_bytes, Vec<(repo_name, bytes)>)
-    let mut lang_map: BTreeMap<String, (u64, Vec<(&str, u64)>)> = BTreeMap::new();
-    // Map: repo_name -> (total_repo_bytes, Vec<(lang_name, bytes)>)
-    let mut repo_code_map: BTreeMap<&str, (u64, Vec<(&str, u64)>)> = BTreeMap::new();
+    let mut lang_map: BTreeMap<String, LangEntry> = BTreeMap::new();
+    let mut repo_code_map: BTreeMap<&str, RepoEntry> = BTreeMap::new();
 
     for repo in &p.user.repos {
         let mut repo_total = 0u64;
@@ -182,7 +192,7 @@ pub fn print_summary(p: &Profile) {
         if repo_total > 0 {
             let mut rlangs: Vec<(&str, u64)> =
                 repo.langs.iter().map(|(l, b)| (l.as_str(), *b)).collect();
-            rlangs.sort_by(|a, b| b.1.cmp(&a.1));
+            rlangs.sort_by_key(|a| std::cmp::Reverse(a.1));
             repo_code_map.insert(&repo.name, (repo_total, rlangs));
         }
     }
@@ -195,10 +205,10 @@ pub fn print_summary(p: &Profile) {
 
     if total_code_bytes > 0 {
         // Rank languages by total bytes
-        let mut ranked_langs: Vec<(String, u64, Vec<(&str, u64)>)> = lang_map
+        let mut ranked_langs: Vec<RankedLang> = lang_map
             .into_iter()
             .map(|(lang, (bytes, mut repos))| {
-                repos.sort_by(|a, b| b.1.cmp(&a.1));
+                repos.sort_by_key(|a| std::cmp::Reverse(a.1));
                 (lang, bytes, repos)
             })
             .collect();
@@ -233,11 +243,11 @@ pub fn print_summary(p: &Profile) {
         }
 
         // Top repos by total code volume
-        let mut ranked_repos: Vec<(&str, u64, Vec<(&str, u64)>)> = repo_code_map
+        let mut ranked_repos: Vec<RankedRepo> = repo_code_map
             .into_iter()
             .map(|(name, (total, langs))| (name, total, langs))
             .collect();
-        ranked_repos.sort_by(|a, b| b.1.cmp(&a.1));
+        ranked_repos.sort_by_key(|a| std::cmp::Reverse(a.1));
 
         println!("\n  Top repositories affecting total language bar volume:");
         for (i, (rname, rtotal, rlangs)) in ranked_repos.iter().take(10).enumerate() {

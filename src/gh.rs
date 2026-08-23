@@ -30,15 +30,14 @@ const BASE64_CHARS: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst
 /// RFC 4648 standard base64 encoding without third-party crates.
 pub fn base64_encode(data: &[u8]) -> String {
     let mut out = String::with_capacity(data.len() * 4 / 3 + 4);
-    let mut chunks = data.chunks_exact(3);
-    for chunk in &mut chunks {
+    let (chunks, rem) = data.as_chunks::<3>();
+    for chunk in chunks {
         let n = ((chunk[0] as u32) << 16) | ((chunk[1] as u32) << 8) | (chunk[2] as u32);
         out.push(BASE64_CHARS[((n >> 18) & 0x3f) as usize] as char);
         out.push(BASE64_CHARS[((n >> 12) & 0x3f) as usize] as char);
         out.push(BASE64_CHARS[((n >> 6) & 0x3f) as usize] as char);
         out.push(BASE64_CHARS[(n & 0x3f) as usize] as char);
     }
-    let rem = chunks.remainder();
     if rem.len() == 1 {
         let n = (rem[0] as u32) << 16;
         out.push(BASE64_CHARS[((n >> 18) & 0x3f) as usize] as char);
@@ -73,7 +72,11 @@ pub fn fetch_avatar_data_uri(agent: &ureq::Agent, url: &str) -> Option<String> {
         .and_then(|v| v.to_str().ok())
         .unwrap_or("image/jpeg")
         .to_string();
-    let mime = content_type.split(';').next().unwrap_or("image/jpeg").trim();
+    let mime = content_type
+        .split(';')
+        .next()
+        .unwrap_or("image/jpeg")
+        .trim();
     let mut bytes = Vec::new();
     std::io::Read::read_to_end(&mut res.body_mut().as_reader(), &mut bytes).ok()?;
     if bytes.is_empty() {
