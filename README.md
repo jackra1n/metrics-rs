@@ -84,7 +84,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Generate metrics SVG
         uses: jackra1n/metrics-rs@master
