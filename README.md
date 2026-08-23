@@ -26,13 +26,12 @@ Designed as an efficient native alternative to heavy JavaScript/Chromium-based p
 - [Rust](https://www.rust-lang.org/) (2024 edition / 1.85+)
 - Git CLI (for `--indepth` mode)
 
-### Build from source
+### Build & Install
 ```bash
 git clone https://github.com/jackra1n/metrics-rs.git
 cd metrics-rs
-cargo build --release
+cargo install --path .
 ```
-The compiled binary will be located at `target/release/metrics-rs`.
 
 ---
 
@@ -41,18 +40,17 @@ The compiled binary will be located at `target/release/metrics-rs`.
 ```bash
 # Basic usage (reads token from GITHUB_TOKEN or GH_TOKEN)
 export GITHUB_TOKEN="ghp_your_token_here"
-./target/release/metrics-rs <USERNAME> <OUTPUT_SVG_PATH>
+metrics-rs <USERNAME> <OUTPUT_SVG_PATH>
 
 # In-depth authored commit analysis
-./target/release/metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --indepth
+metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --indepth
 
 # In-depth mode with excluded languages
-./target/release/metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --indepth --ignore-languages swift,gdscript
+metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --indepth --ignore-languages swift,gdscript
 
 # Passing token explicitly via flag
-./target/release/metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --token "ghp_..."
+metrics-rs <USERNAME> <OUTPUT_SVG_PATH> --token "ghp_..."
 ```
-
 ### CLI Options
 
 | Argument / Flag | Description |
