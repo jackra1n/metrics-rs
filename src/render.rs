@@ -63,6 +63,34 @@ fn fmt_storage(kb: u64) -> String {
     }
 }
 
+/// Human code size from raw bytes (B, KB, MB, GB).
+pub fn fmt_bytes(bytes: u64) -> String {
+    if bytes >= 1_000_000_000 {
+        let gb = bytes as f64 / 1_000_000_000.0;
+        let s = format!("{gb:.1}")
+            .trim_end_matches('0')
+            .trim_end_matches('.')
+            .to_string();
+        format!("{s}GB")
+    } else if bytes >= 1_000_000 {
+        let mb = bytes as f64 / 1_000_000.0;
+        let s = format!("{mb:.1}")
+            .trim_end_matches('0')
+            .trim_end_matches('.')
+            .to_string();
+        format!("{s}MB")
+    } else if bytes >= 1_000 {
+        let kb = bytes as f64 / 1_000.0;
+        let s = format!("{kb:.1}")
+            .trim_end_matches('0')
+            .trim_end_matches('.')
+            .to_string();
+        format!("{s}KB")
+    } else {
+        format!("{bytes}B")
+    }
+}
+
 /// Coarse age of an ISO timestamp ("2018-11-14T13:40:45Z") relative to the
 /// Unix epoch, using only UTC arithmetic: years when >=1y, then months,
 /// then days. `now_secs` injected for testability/determinism.
@@ -324,18 +352,25 @@ pub fn render(p: &Profile) -> String {
 
     // faint analysis-meta line: what the numbers above were computed over,
     // centered directly above the language bar
+    let total_code_bytes: u64 = p
+        .user
+        .repos
+        .iter()
+        .flat_map(|r| &r.langs)
+        .map(|(_, s)| *s)
+        .sum();
     let meta = if let Some(indepth) = &p.indepth {
         format!(
-            "{} edited files · {} · {} commits",
+            "{} edited files · {} of code · {} commits",
             fmt(indepth.files),
-            fmt_storage(p.storage_kb),
+            fmt_bytes(total_code_bytes),
             fmt(p.lines.commits),
         )
     } else {
         format!(
-            "analyzed {} repos · {} · {} commits",
+            "analyzed {} repos · {} of code · {} commits",
             p.user.repos_total,
-            fmt_storage(p.storage_kb),
+            fmt_bytes(total_code_bytes),
             fmt(p.lines.commits),
         )
     };
